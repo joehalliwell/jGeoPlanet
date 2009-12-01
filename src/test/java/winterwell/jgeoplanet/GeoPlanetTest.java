@@ -9,7 +9,7 @@ import winterwell.jgeoplanet.PlaceNotFoundException;
 import winterwell.jgeoplanet.GeoPlanet;
 import winterwell.jgeoplanet.GeoPlanetException;
 
-public class WhereOnEarthTest {
+public class GeoPlanetTest {
 	
 	static String appId = "Hw4yIP3V34HUOs9sZlzJ74OGVtQFMU944Z8uLhnCDcPW7i0vf4.3o7mJCcZEz0NR0l9Eiw--";
 	

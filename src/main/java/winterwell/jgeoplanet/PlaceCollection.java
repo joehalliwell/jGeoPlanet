@@ -1,4 +1,4 @@
-package winterwell.jwoe;
+package winterwell.jgeoplanet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
  */
 public class PlaceCollection {
 
-	WhereOnEarth client;
+	GeoPlanet client;
 	Place base;
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
@@ -32,7 +32,7 @@ public class PlaceCollection {
 	boolean useShortForm = false;
 	int total = -1;
 	
-	PlaceCollection(WhereOnEarth client, String query) {
+	PlaceCollection(GeoPlanet client, String query) {
 		this.client = client;
 		this.query = query;
 	}
@@ -129,9 +129,9 @@ public class PlaceCollection {
 	 * Requires network access. Returns an empty list if no results were found.
 	 * @param start The first result to get indexed from 0
 	 * @param count The maximum number of results to return. Zero (0) returns all results.
-	 * @throws WhereOnEarthException for general errors
+	 * @throws GeoPlanetException for general errors
 	 */
-	public List<Place> get(int start, int count) throws WhereOnEarthException {
+	public List<Place> get(int start, int count) throws GeoPlanetException {
 		if (start < 0) throw new IllegalArgumentException("start parameter must be >= 0");
 		if (count < 0) throw new IllegalArgumentException("count parameter must be >= 0");
 		assert count >=0 ;
@@ -174,9 +174,9 @@ public class PlaceCollection {
 	 * Get all places in this collection.
 	 * Cosmetic method calling <code>get(0,0)</code>.
 	 * Requires network access.
-	 * @throws WhereOnEarthException for general errors
+	 * @throws GeoPlanetException for general errors
 	 */
-	public List<Place> get() throws WhereOnEarthException {
+	public List<Place> get() throws GeoPlanetException {
 		return get(0, 0);
 	}
 	
@@ -184,14 +184,14 @@ public class PlaceCollection {
 	 * Get a specific place from this collection.
 	 * Cosmetic method calling <code>get(index, 1).get(0)</code>
 	 * Not usually used with index != 0. Requires network access.
-	 * @throws WhereOnEarthException for general errors
+	 * @throws GeoPlanetException for general errors
 	 * @throws ArrayIndexOutOfBoundsException for invalid indices
 	 */
-	public Place get(int index) throws WhereOnEarthException {
+	public Place get(int index) throws GeoPlanetException {
 		return get(index, 1).get(0);
 	}
 	
-	private List<Place> processResults(JSONObject tmp) throws WhereOnEarthException {
+	private List<Place> processResults(JSONObject tmp) throws GeoPlanetException {
 		try {
 			tmp = tmp.getJSONObject("places");
 			total = tmp.getInt("total");
@@ -209,7 +209,7 @@ public class PlaceCollection {
 			}
 			return results;
 		} catch (JSONException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		}
 	}
 }

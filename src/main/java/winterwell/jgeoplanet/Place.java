@@ -1,4 +1,4 @@
-package winterwell.jwoe;
+package winterwell.jgeoplanet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ import org.json.JSONObject;
  */
 public class Place {
 
-	WhereOnEarth client;
+	GeoPlanet client;
 	private final long woeId;
 	private final String name;
 	private final String placeTypeName;
@@ -36,10 +36,10 @@ public class Place {
 	/**
 	 * Get a place from a woe id
 	 * @param woeid
-	 * @throws WhereOnEarthException 
+	 * @throws GeoPlanetException 
 	 * @throws JSONException 
 	 */
-	Place(WhereOnEarth client, JSONObject place) throws WhereOnEarthException {
+	Place(GeoPlanet client, JSONObject place) throws GeoPlanetException {
 		this.client = client;
 		try {
 			this.woeId = place.getLong("woeid");
@@ -62,7 +62,7 @@ public class Place {
 			this.southWest = new Location(bbox.getJSONObject("southWest"));
 			this.northEast = new Location(bbox.getJSONObject("northEast"));
 		} catch (JSONException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		}
 	}
 
@@ -85,9 +85,9 @@ public class Place {
 	
 	/**
 	 * @return long form version of this place
-	 * @throws WhereOnEarthException
+	 * @throws GeoPlanetException
 	 */
-	public Place getLongForm() throws WhereOnEarthException {
+	public Place getLongForm() throws GeoPlanetException {
 		if (isLongForm()) return this;
 		return client.getPlace(woeId);
 	}
@@ -118,7 +118,7 @@ public class Place {
 	 * Handy for checking the language.
 	 * @return the client associated with this place
 	 */
-	public WhereOnEarth getClient() {
+	public GeoPlanet getClient() {
 		return client;
 	}
 
@@ -183,9 +183,9 @@ public class Place {
 	 * parent of California. In this version of GeoPlanet, places have 
 	 * only one parent.
 	 * @return the parent of this place
-	 * @throws WhereOnEarthException
+	 * @throws GeoPlanetException
 	 */
-	public Place getParent() throws WhereOnEarthException {
+	public Place getParent() throws GeoPlanetException {
 		StringBuilder uri = new StringBuilder("/place/");
 		uri.append(woeId);
 		uri.append("/parent");
@@ -193,7 +193,7 @@ public class Place {
 		try {
 			return new Place(client, parent.getJSONObject("place"));
 		} catch (JSONException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		}
 	}
 

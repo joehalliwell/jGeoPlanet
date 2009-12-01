@@ -1,4 +1,4 @@
-package winterwell.jwoe;
+package winterwell.jgeoplanet;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.json.JSONObject;
  * @author Joe Halliwell <joe@winterwell.com>
  *
  */
-public class WhereOnEarth {
+public class GeoPlanet {
 
 	private final String appId;
 	private final String language;
@@ -45,7 +45,7 @@ public class WhereOnEarth {
 	/**
 	 * Convenience constructor for english language GeoPlanet applications.
 	 */
-	public WhereOnEarth(String appId) {
+	public GeoPlanet(String appId) {
 		this(appId, "en");
 	}
 	/**
@@ -54,7 +54,7 @@ public class WhereOnEarth {
 	 * @param appId your application ID
 	 * @param language the language to use
 	 */
-	public WhereOnEarth(String appId, String language) {
+	public GeoPlanet(String appId, String language) {
 		this.appId = appId;
 		this.httpClient = new HttpClient();
 		// TODO: Validate language
@@ -71,15 +71,15 @@ public class WhereOnEarth {
 	/**
 	 * @return the place corresponding to the specified WOE ID
 	 * @throws PlaceNotFoundException if the ID is invalid
-	 * @throws WhereOnEarthException for general errors
+	 * @throws GeoPlanetException for general errors
 	 */
-	public Place getPlace(long woeId) throws WhereOnEarthException {
+	public Place getPlace(long woeId) throws GeoPlanetException {
 		if (woeId < 0) throw new IllegalArgumentException("WOE IDs must be greater than 0");
 		JSONObject place = doGet("/place/" + woeId, false);
 		try {
 			return new Place(this, place.getJSONObject("place"));
 		} catch (JSONException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		}
 	}
 	/**
@@ -87,9 +87,9 @@ public class WhereOnEarth {
 	 * to some extent.
 	 * Roughly equivalent to calling <code>getPlaces(String).get(0)</code>
 	 * @throws PlaceNotFoundException if there are no matches for the query
-	 * @throws WhereOnEarthException on general errors 
+	 * @throws GeoPlanetException on general errors 
 	 */
-	public Place getPlace(String query) throws WhereOnEarthException {
+	public Place getPlace(String query) throws GeoPlanetException {
 		List<Place> places = getPlaces(query).get(0,1);
 		if (places.size() == 0) throw new PlaceNotFoundException();
 		return places.get(0);
@@ -106,7 +106,7 @@ public class WhereOnEarth {
 		return new PlaceCollection(this, query);
 	}
 	
-	JSONObject doGet(String path, boolean shortForm) throws WhereOnEarthException, PlaceNotFoundException {
+	JSONObject doGet(String path, boolean shortForm) throws GeoPlanetException, PlaceNotFoundException {
 		assert path.startsWith("/");
 		StringBuilder uri = new StringBuilder("http://where.yahooapis.com/v1");
 		uri.append(path);
@@ -123,22 +123,22 @@ public class WhereOnEarth {
 			case 200:
 				break;
 			case 400:
-				throw new WhereOnEarthException("Invalid application ID");
+				throw new GeoPlanetException("Invalid application ID");
 			case 404:
 				throw new PlaceNotFoundException();
 			default:
-				throw new WhereOnEarthException("Unexpected response from GeoPlanet server: " + get.getStatusLine());
+				throw new GeoPlanetException("Unexpected response from GeoPlanet server: " + get.getStatusLine());
 			}
 			return new JSONObject(response);
 		}
 		catch (HttpException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		} 
 		catch (JSONException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		} 
 		catch (IOException e) {
-			throw new WhereOnEarthException(e);
+			throw new GeoPlanetException(e);
 		}
 	}
 	

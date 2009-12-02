@@ -15,6 +15,10 @@ import org.json.JSONObject;
  * as described at: http://developer.yahoo.com/geo/geoplanet/
  * 
  * <p>
+ * All applications require a valid Application ID. These can be
+ * obtained from: http://developer.yahoo.com/wsregapp/
+ * </p>
+ * <p>
  * Example:
  * <pre>
  * String mySecretAppId = "abc123";
@@ -41,25 +45,49 @@ public class GeoPlanet {
 	private final String appId;
 	private final String language;
 	private HttpClient httpClient;
+	private final String serviceURI;
 	
 	/**
-	 * Convenience constructor for english language GeoPlanet applications.
+	 * Default serviceURI (the Yahoo! implementation) for convenience constructors.
+	 */
+	public final static String defaultServiceURI = "http://where.yahooapis.com/v1";
+	
+	/**
+	 * Default language for convenience constructors.
+	 */
+	public final static String defaultLanguage = "en";	
+	
+	/**
+	 * Convenience constructor for English language GeoPlanet applications.
 	 */
 	public GeoPlanet(String appId) {
-		this(appId, "en");
+		this(appId, defaultLanguage);
 	}
+	
 	/**
 	 * Create a client for the GeoPlanet service using the specified
-	 * application ID obtained from 
+	 * application ID and language.
 	 * @param appId your application ID
-	 * @param language the language to use
+	 * @param language code for the language to use
 	 */
 	public GeoPlanet(String appId, String language) {
-		this.appId = appId;
-		this.httpClient = new HttpClient();
-		// TODO: Validate language
-		this.language = language;
+		this(appId, language, defaultServiceURI);
 	}
+	
+	/**
+	 * Create a client for the GeoPlanet service using the specified
+	 * application ID, language and service URI.
+	 * @param appId your application ID
+	 * @param language code for the language to use
+	 * @param serviceURI base URI for GeoPlanet requests 
+	 */
+	public GeoPlanet(String appId, String language, String serviceURI) {
+		this.appId = appId;	
+		this.language = language; // TODO: Validate language
+		this.serviceURI = serviceURI;
+		this.httpClient = new HttpClient();
+	}
+	
 	
 	/**
 	 * @return the language used by this client
@@ -86,6 +114,8 @@ public class GeoPlanet {
 	 * Returns the first {@link Place} whose name matches the query
 	 * to some extent.
 	 * Roughly equivalent to calling <code>getPlaces(String).get(0)</code>
+	 * except that it throws a <code>PlaceNotFoundException</code> if
+	 * there were no matching places. 
 	 * @throws PlaceNotFoundException if there are no matches for the query
 	 * @throws GeoPlanetException on general errors 
 	 */
@@ -108,7 +138,7 @@ public class GeoPlanet {
 	
 	JSONObject doGet(String path, boolean shortForm) throws GeoPlanetException, PlaceNotFoundException {
 		assert path.startsWith("/");
-		StringBuilder uri = new StringBuilder("http://where.yahooapis.com/v1");
+		StringBuilder uri = new StringBuilder(serviceURI);
 		uri.append(path);
 		uri.append("?");
 		uri.append("appid="); uri.append(appId);
@@ -123,7 +153,7 @@ public class GeoPlanet {
 			case 200:
 				break;
 			case 400:
-				throw new GeoPlanetException("Invalid application ID");
+				throw new InvalidAppIdException();
 			case 404:
 				throw new PlaceNotFoundException();
 			default:

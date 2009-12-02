@@ -23,6 +23,7 @@ public class Place {
 	private final long woeId;
 	private final String name;
 	private final String placeTypeName;
+	private final int placeTypeCode;
 	private String postal;
 	private String locality1;
 	private String locality2;
@@ -45,7 +46,7 @@ public class Place {
 			this.woeId = place.getLong("woeid");
 			this.name = place.getString("name");
 			this.placeTypeName = place.getString("placeTypeName");
-
+			this.placeTypeCode = place.getJSONObject("placeTypeName attrs").getInt("code"); 
 			// Long fields
 			if (!place.has("postal")) return;
 
@@ -68,10 +69,9 @@ public class Place {
 
 	private AdminRegion getAdminRegion(JSONObject place, int i) throws JSONException {
 		assert i >= 1 && i <= 3;
-		if (place.has("admin" + i)) {
-			return new AdminRegion(place, "admin" + i);
-		}
-		return null;
+		String admin = place.getString("admin" + i);
+		if (admin.equals("")) return null;
+		return new AdminRegion(place, "admin" + i);
 	}
 	
 	/**
@@ -111,6 +111,14 @@ public class Place {
 	 */
 	public String getPlaceTypeName() {
 		return placeTypeName;
+	}
+	
+	/**
+	 * Returns the numerical code corresponding to the place type e.g. 7 for a "Town"
+	 * @return the place type code
+	 */
+	public int getPlaceTypeCode() {
+		return placeTypeCode;
 	}
 	
 	/**
@@ -260,21 +268,43 @@ public class Place {
 	class AdminRegion {
 		public final String name;
 		public final String type;
+		public final String code;
 		
 		public AdminRegion(JSONObject place, String name) throws JSONException {
 			this.name = place.getString(name);
 			String attrName = name + " attrs";
-			if (! place.has(attrName)) {
-				type = null;
-				return;
-			}
 			JSONObject attrs = place.getJSONObject(attrName);
-			// TODO Implement!
-			this.type = null;
+			String code = attrs.getString("code");
+			this.code = (code.equals("") ? null : code);
+			this.type = attrs.getString("type");
 		}
 		
+		/**
+		 * @return The name of this administrative region
+		 */
 		public String getName() {
 			return name;
+		}
+
+		/**
+		 * Returns the type of place this administrative region is. The values
+		 * returned here are presumably place type names as returned by
+		 * {@link Place#getPlaceTypeName()}, but is not covered by the API docs
+		 * and should not be assumed.
+		 * @return The placeType of this administrative region e.g. "Country"
+		 */
+		public String getType() {
+			return type;
+		}
+
+		/**
+		 * Returns a short code for the region e.g. "IT" for Italy. This
+		 * is <em>not</em the same as the (numeric) codes retrieved by {@link Place#placeTypeCode()}.
+		 * May be null if there is no known short code.
+		 * @return A short code for the region. May be null.
+		 */
+		public String getCode() {
+			return code;
 		}
 	}
 	

@@ -46,7 +46,13 @@ public class GeoPlanetTest {
 		Place earth = w.getPlace(1);
 		assert earth.getName().equals("Earth");
 	}
-		
+	
+	@Test(expected=InvalidAppIdException.class)
+	public void testInvalidAppId() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet("invalid-app-id");
+		Place e = g.getPlace(1);
+	}
+	
 	@Test(expected=PlaceNotFoundException.class)
 	public void testInvalidWoeId() throws GeoPlanetException {
 		GeoPlanet w = new GeoPlanet(appId);

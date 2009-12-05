@@ -1,17 +1,53 @@
 package winterwell.jgeoplanet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
-import org.junit.Test;
+import java.util.Properties;
 
-import winterwell.jgeoplanet.Place;
-import winterwell.jgeoplanet.PlaceCollection;
-import winterwell.jgeoplanet.PlaceNotFoundException;
-import winterwell.jgeoplanet.GeoPlanet;
-import winterwell.jgeoplanet.GeoPlanetException;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class GeoPlanetTest {
 	
-	static String appId = "Hw4yIP3V34HUOs9sZlzJ74OGVtQFMU944Z8uLhnCDcPW7i0vf4.3o7mJCcZEz0NR0l9Eiw--";
+	final static String propertyFile = "jgeoplanet.properties";
+	final static String property = "applicationId";
+	static String appId;
+	
+	@BeforeClass
+	public static void getAppId() throws Exception {
+		Properties properties = new Properties() ;
+		try {
+			InputStream is =  ClassLoader.getSystemResourceAsStream(propertyFile);
+			properties.load(is);
+			appId = properties.getProperty(property);
+			if (appId == null) throw new Exception("Could not locate property");
+		} catch (Exception e) {
+			printTestSetupHelp();
+			throw new Exception(e);
+		}
+	}
+	
+	static void printTestSetupHelp() {
+		String m = "FATAL ERROR! Could not locate application ID.\n" +
+				"Please ensure that you have a properties file called '%1$s' on " +
+				"your classpath and that it defines the '%2$s' property correctly. " +
+				"Application IDs are available from %3$s";
+		System.out.println(String.format(m, propertyFile, property, GeoPlanet.appIdUrl));
+	}
+	
+	@Test
+	public void testAppId() throws GeoPlanetException, FileNotFoundException, IOException {
+		Properties properties = new Properties() ;
+		URL url =  ClassLoader.getSystemResource("jgeoplanet.properties");
+		properties.load(new FileInputStream(new File(url.getFile())));
+		String a = properties.getProperty("jgeoplanet.appId");
+		assert a.equals(appId);
+	}
 	
 	@Test
 	public void testBasic() throws GeoPlanetException {

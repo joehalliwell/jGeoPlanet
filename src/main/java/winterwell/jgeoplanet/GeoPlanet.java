@@ -42,15 +42,16 @@ import org.json.JSONObject;
  */
 public class GeoPlanet {
 
+	public static String appIdUrl = "http://developer.yahoo.com/wsregapp/";
 	private final String appId;
 	private final String language;
 	private HttpClient httpClient;
-	private final String serviceURI;
+	private final String serviceUri;
 	
 	/**
 	 * Default serviceURI (the Yahoo! implementation) for convenience constructors.
 	 */
-	public final static String defaultServiceURI = "http://where.yahooapis.com/v1";
+	public final static String defaultServiceUri = "http://where.yahooapis.com/v1";
 	
 	/**
 	 * Default language for convenience constructors.
@@ -71,7 +72,7 @@ public class GeoPlanet {
 	 * @param language code for the language to use
 	 */
 	public GeoPlanet(String appId, String language) {
-		this(appId, language, defaultServiceURI);
+		this(appId, language, defaultServiceUri);
 	}
 	
 	/**
@@ -79,12 +80,12 @@ public class GeoPlanet {
 	 * application ID, language and service URI.
 	 * @param appId your application ID
 	 * @param language code for the language to use
-	 * @param serviceURI base URI for GeoPlanet requests 
+	 * @param serviceUri base URI for GeoPlanet requests 
 	 */
-	public GeoPlanet(String appId, String language, String serviceURI) {
+	public GeoPlanet(String appId, String language, String serviceUri) {
 		this.appId = appId;	
 		this.language = language; // TODO: Validate language
-		this.serviceURI = serviceURI;
+		this.serviceUri = serviceUri;
 		this.httpClient = new HttpClient();
 	}
 	
@@ -138,7 +139,7 @@ public class GeoPlanet {
 	
 	JSONObject doGet(String path, boolean shortForm) throws GeoPlanetException, PlaceNotFoundException {
 		assert path.startsWith("/");
-		StringBuilder uri = new StringBuilder(serviceURI);
+		StringBuilder uri = new StringBuilder(serviceUri);
 		uri.append(path);
 		uri.append("?");
 		uri.append("appid="); uri.append(appId);

@@ -41,15 +41,6 @@ public class GeoPlanetTest {
 	}
 	
 	@Test
-	public void testAppId() throws GeoPlanetException, FileNotFoundException, IOException {
-		Properties properties = new Properties() ;
-		URL url =  ClassLoader.getSystemResource("jgeoplanet.properties");
-		properties.load(new FileInputStream(new File(url.getFile())));
-		String a = properties.getProperty("jgeoplanet.appId");
-		assert a.equals(appId);
-	}
-	
-	@Test
 	public void testBasic() throws GeoPlanetException {
 		GeoPlanet w = new GeoPlanet(appId);
 		Place earth = w.getPlace(1);

@@ -56,6 +56,12 @@ public class GeoPlanetTest {
 		client.getPlace(11111111111L);
 	}
 	
+	@Test(expected=PlaceNotFoundException.class)
+	public void testNegativeWoeId() throws GeoPlanetException {
+		client.getPlace(-1);
+	}
+	
+	
 	@Test
 	public void testEdinburgh() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh, UK");

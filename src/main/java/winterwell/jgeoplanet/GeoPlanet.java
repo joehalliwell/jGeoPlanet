@@ -136,10 +136,9 @@ public class GeoPlanet {
 	 * @throws GeoPlanetException for general errors
 	 */
 	public Place getPlace(long woeId) throws GeoPlanetException {
-		if (woeId < 0) throw new IllegalArgumentException("WOE IDs must be greater than 0");
-		JSONObject place;
 		try {
-			place = doGet("/place/" + woeId, false);
+			if (woeId < 0) throw new PlaceNotFoundException("WOEID");
+			JSONObject place = doGet("/place/" + woeId, false);
 			return new Place(this, place.getJSONObject("place"));
 		} catch (PlaceNotFoundException e) {
 			assert e.getPlaceName().equals("WOEID");

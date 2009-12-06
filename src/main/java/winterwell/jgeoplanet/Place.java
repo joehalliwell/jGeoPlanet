@@ -49,7 +49,7 @@ public class Place extends GeoPlanetResource {
 			placeTypeNameVariant = place.getString("placeTypeName");
 			int placeTypeCode = place.getJSONObject("placeTypeName attrs").getInt("code");
 			this.placeType = client.getPlaceType(placeTypeCode);
-			if (!placeTypeNameVariant.equals(placeType.getName())) {
+			if (false && !placeTypeNameVariant.equals(placeType.getName())) {
 				System.out.println("Warning! '" + name + "' " +
 					"has type name '" + placeTypeNameVariant +"' " +
 					"but type code '" + placeType.getName() + "'");

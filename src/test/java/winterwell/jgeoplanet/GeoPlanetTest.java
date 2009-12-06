@@ -42,83 +42,71 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testBasic() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place earth = w.getPlace(1);
+		Place earth = client.getPlace(1);
 		assert earth.getName().equals("Earth");
 	}
 	
 	@Test(expected=InvalidAppIdException.class)
 	public void testInvalidAppId() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet("invalid-app-id");
-		Place e = g.getPlace(1);
 	}
 	
 	@Test(expected=PlaceNotFoundException.class)
 	public void testInvalidWoeId() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		@SuppressWarnings("unused")
-		Place junk = w.getPlace(11111111111L);
+		client.getPlace(11111111111L);
 	}
 	
 	@Test
 	public void testEdinburgh() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place edinburgh = w.getPlace("Edinburgh, UK");
+		Place edinburgh = client.getPlace("Edinburgh, UK");
 		assert edinburgh.getWoeId() == 19344 : edinburgh.getWoeId();
 	}
 	
 	@Test
 	public void testParent() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place lothian = w.getPlace("Lothian");
+		Place lothian = client.getPlace("Lothian");
 		Place parent = lothian.getParent();
 		assert parent.getName().equals("Scotland");
 	}
 	
 	@Test
 	public void testChildren() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place edinburgh = w.getPlace("Edinburgh, UK");
+		Place edinburgh = client.getPlace("Edinburgh, UK");
 		List<Place> children = edinburgh.getChildren().get();
 		assert children.size() > 100 : children.size();
-		Place marchmont = w.getPlace("Marchmont, Edinburgh");
+		Place marchmont = client.getPlace("Marchmont, Edinburgh");
 		assert children.contains(marchmont);
 	}
 	
 	@Test
 	public void testSiblings() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place marchmont = w.getPlace("Marchmont, Edinburgh");
-		Place bruntsfield = w.getPlace("Bruntsfield, Edinburgh");
+		Place marchmont = client.getPlace("Marchmont, Edinburgh");
+		Place bruntsfield = client.getPlace("Bruntsfield, Edinburgh");
 		assert marchmont.getSiblings().get().contains(bruntsfield);
 	}
 	
 	@Test
 	public void testAncestors() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		List<Place> anc = w.getPlace("Marchmont, Edinburgh").getAncestors().get();
-		assert anc.contains(w.getPlace("Edinburgh"));
+		List<Place> anc = client.getPlace("Marchmont, Edinburgh").getAncestors().get();
+		assert anc.contains(client.getPlace("Edinburgh"));
 	}
 	
 	@Test
 	public void testNotAPlace() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		List<Place> zs = w.getPlaces("zzzzzzzzzzzzzzzzzzzzz").get();
+		List<Place> zs = client.getPlaces("zzzzzzzzzzzzzzzzzzzzz").get();
 		assert zs.size() == 0;
 	}
 	
 	@Test(expected=PlaceNotFoundException.class)
 	public void testNoParent() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place earth = w.getPlace(1);
+		Place earth = client.getPlace(1);
 		assert earth.getName().equals("Earth");
 		earth.getParent(); // This should throw a PlaceNotFoundException
 	}
 	
 	@Test
 	public void testCountries() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place earth = w.getPlace(1);
+		Place earth = client.getPlace(1);
 		List<Place> countries = earth.getChildren().type("Country").get();
 		assert countries.size() > 200 : countries.size();
 		Place country = countries.get(0);
@@ -129,8 +117,7 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testShortForm() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		PlaceCollection p = w.getPlaces("Milan, Italy").shortForm(true);
+		PlaceCollection p = client.getPlaces("Milan, Italy").shortForm(true);
 		Place milan = p.get(0);
 		assert milan.isLongForm() == false;
 		assert milan.getPostal() == null;
@@ -138,8 +125,7 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testLocation() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place ed = w.getPlace("Edinburgh, UK");
+		Place ed = client.getPlace("Edinburgh, UK");
 		double longitude = ed.getCentroid().getLongitude();
 		double lat = ed.getCentroid().getLatitude();
 		assert Math.abs(lat - 55) < 1;
@@ -148,8 +134,7 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testSize() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		PlaceCollection eds = w.getPlaces("Edinburgh");
+		PlaceCollection eds = client.getPlaces("Edinburgh");
 		assert eds.size() == -1;
 		Place ed = eds.get(0);
 		assert eds.size() >= 1;
@@ -157,17 +142,16 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testPlaceType() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place paris = w.getPlace("Paris, France");
+		Place paris = client.getPlace("Paris, France");
 		PlaceType town = paris.getPlaceType();
-		assert town.getName() == "Town";
-		assert town.getCode() == 7;
+		assert town.getName().equals("Town") : town.getName();
+		assert town.getCode() == 7 : town.getCode();
 	}
 	
 	@Test
 	public void testLocalisation() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId, "it");
-		Place milan = w.getPlace("Milano, Italia");
+		GeoPlanet g = new GeoPlanet(appId, "it");
+		Place milan = g.getPlace("Milano, Italia");
 		assert milan.getWoeId() == 718345;
 		assert milan.getClient().getLanguage().startsWith("it");
 		assert milan.getPlaceType().getName().equals("Città");
@@ -175,15 +159,13 @@ public class GeoPlanetTest {
 	
 	@Test
 	public void testPlaceTypeNameWierdness() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		Place aland = w.getPlace("Greenland");
-		assert aland.getPlaceType().equals(w.getPlaceType("Country"));
+		Place aland = client.getPlace("Greenland");
+		assert aland.getPlaceType().equals(client.getPlaceType("Country"));
 		assert aland.getPlaceTypeNameVariant().equals("Province");
 	}
 	
 	@Test(expected=InvalidPlaceType.class)
 	public void testInvalidPlaceType() throws GeoPlanetException {
-		GeoPlanet w = new GeoPlanet(appId);
-		w.getPlaceType("Province");
+		client.getPlaceType("Province");
 	}
 }

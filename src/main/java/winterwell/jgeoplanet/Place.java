@@ -51,8 +51,8 @@ public class Place extends GeoPlanetResource {
 			this.placeType = client.getPlaceType(placeTypeCode);
 			if (!placeTypeNameVariant.equals(placeType.getName())) {
 				System.out.println("Warning! '" + name + "' " +
-					"claims to be '" + placeTypeNameVariant +"' " +
-					"but is in fact '" + placeType.getName() + "'");
+					"has type name '" + placeTypeNameVariant +"' " +
+					"but type code '" + placeType.getName() + "'");
 			}
 			// Long fields
 			if (!place.has("postal")) return;

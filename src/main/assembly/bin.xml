@@ -20,6 +20,10 @@
     </fileSet>
     <fileSet>
       <directory>${project.build.directory}</directory>
-    </fileSet>
+      <outputDirectory></outputDirectory> <!--  magically supresses target -->
+ 	  <includes>
+      	<include>*.jar</include>
+      </includes>
+     </fileSet>
   </fileSets>
 </assembly>

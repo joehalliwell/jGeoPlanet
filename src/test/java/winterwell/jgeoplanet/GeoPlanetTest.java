@@ -170,11 +170,15 @@ public class GeoPlanetTest {
 	}
 	
 	@Test
-	public void testPlaceTypeEquality() throws GeoPlanetException {
+	public void testPlaceEqualities() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId, "it");
 		Place milano = g.getPlace("Milano, Italia");
 		Place milan = client.getPlace("Milan, Italy");
 		assert milano.getWoeId() == milan.getWoeId();
+		assert milano.equals(milan);
+		assert milano.hashCode() == milan.hashCode();
+		
 		assert milano.getPlaceType().equals(milan.getPlaceType());
+		assert milano.getPlaceType().hashCode() == milan.getPlaceType().hashCode();
 	}
 }

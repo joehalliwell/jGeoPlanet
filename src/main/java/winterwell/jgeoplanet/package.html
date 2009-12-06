@@ -10,6 +10,16 @@
 <body bgcolor="white">
 
 jGeoPlanet is an LGPL client library for the Yahoo! GeoPlanet service.
+GeoPlanet is the main class and a good starting point for exploring
+the library.
+
+<h2>Example usage</h2>
+
+<pre>
+GeoPlanet client = new GeoPlanet("my-secret-app-id");
+Place edinburgh = client.getPlace("Edinburgh, UK");
+List&lt;Place&gt; suburbs = edinburgh.getChildren().get();
+</pre>
 
 <h2>Related Documentation</h2>
 

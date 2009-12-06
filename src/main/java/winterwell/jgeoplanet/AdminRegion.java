@@ -33,10 +33,7 @@ public class AdminRegion extends GeoPlanetResource {
 	}
 
 	/**
-	 * Returns the type of place this administrative region is. The values
-	 * returned here are presumably place type names as returned by
-	 * {@link Place#getPlaceTypeName()}, but is not covered by the API docs
-	 * and should not be assumed.
+	 * Returns the type of place this administrative region is.
 	 * @return The placeType of this administrative region e.g. "Country"
 	 */
 	public String getType() {
@@ -45,7 +42,7 @@ public class AdminRegion extends GeoPlanetResource {
 
 	/**
 	 * Returns a short code for the region e.g. "IT" for Italy. This
-	 * is <em>not</em the same as the (numeric) codes retrieved by {@link Place#placeTypeCode()}.
+	 * is <em>not</em the same as the (numeric) codes retrieved by {@link PlaceType#getCode()}.
 	 * May be null if there is no known short code.
 	 * @return A short code for the region. May be null.
 	 */

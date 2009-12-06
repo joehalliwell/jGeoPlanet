@@ -21,7 +21,7 @@ public class PlaceNotFoundException extends GeoPlanetException {
 	/**
 	 * Return the name of the place that could not be found.
 	 * This can also be a (string representation of) a WOE ID.
-	 * @return
+	 * @return representation of place that could not be found
 	 */
 	public String getPlaceName() {
 		return placeName;

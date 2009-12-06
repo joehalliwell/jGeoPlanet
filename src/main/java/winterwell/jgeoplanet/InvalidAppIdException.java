@@ -17,8 +17,8 @@ public class InvalidAppIdException extends GeoPlanetException {
 	}
 	
 	/**
-	 * Retrieve the problematic application ID
-	 * @return
+	 * Returns the problematic application ID
+	 * @return the problematic application ID
 	 */
 	public String getInvalidAppId() {
 		return appId;

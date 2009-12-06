@@ -60,8 +60,8 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * List<Place> countries = earth.getChildren().type(country).get();
 	 * </pre>
 	 * </p>
-	 * @param placeType The place type to filter on. May be null to unset the type.
-	 * @return a version of this collection filtered by the specified type
+	 * @param type The place type to filter on. May be null to unset the type.
+	 * @return a version of this collection filtered by the specified type.
 	 */
 	public PlaceCollection type(PlaceType type) {
 		if (type.equals(this.type)) return this;

@@ -67,7 +67,7 @@ public class GeoPlanet {
 	
 	/**
 	 * Convenience constructor for English language GeoPlanet applications.
-	 * @see Notes on {@link #GeoPlanet(String, String, String)}
+	 * @see #GeoPlanet(String, String, String)
 	 * @throws GeoPlanetException 
 	 */
 	public GeoPlanet(String appId) throws GeoPlanetException {
@@ -77,7 +77,7 @@ public class GeoPlanet {
 	/**
 	 * Create a client for the GeoPlanet service using the specified
 	 * application ID and language.
-	 * @see Notes on {@link #GeoPlanet(String, String, String)}
+	 * @see #GeoPlanet(String, String, String)
 	 * @param appId your application ID
 	 * @param language code for the language to use
 	 * @throws GeoPlanetException 

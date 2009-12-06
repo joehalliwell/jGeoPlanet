@@ -168,4 +168,13 @@ public class GeoPlanetTest {
 	public void testInvalidPlaceType() throws GeoPlanetException {
 		client.getPlaceType("Province");
 	}
+	
+	@Test
+	public void testPlaceTypeEquality() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId, "it");
+		Place milano = g.getPlace("Milano, Italia");
+		Place milan = client.getPlace("Milan, Italy");
+		assert milano.getWoeId() == milan.getWoeId();
+		assert milano.getPlaceType().equals(milan.getPlaceType());
+	}
 }

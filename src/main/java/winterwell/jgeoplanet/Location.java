@@ -19,14 +19,16 @@ public class Location {
 	}
 	
 	/**
-	 * @return the latitude of this location
+	 * Returns the latitude of this location.
+	 * @return the latitude of this location.
 	 */
 	public double getLongitude() {
 		return longitude;
 	}
 	
 	/**
-	 * @return the longitude of this location
+	 * Returns  the longitude of this location.
+	 * @return the longitude of this location.
 	 */
 	public double getLatitude() {
 		return latitiude;

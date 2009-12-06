@@ -166,7 +166,7 @@ public class GeoPlanet {
 	/**
 	 * Returns a {@link PlaceCollection} of places whose names match the query
 	 * to some extent.
-	 * The query may include an country code to adjust the ordering e.g.
+	 * The query may include an country code to adjust the ordering
 	 * e.g. <code>getPlaces("Edinburgh, UK")</code> vs. <code>getPlaces("Edinburgh, USA")</code>
 	 * @return a {@link PlaceCollection} of places matching the query
 	 */

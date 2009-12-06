@@ -53,16 +53,10 @@ public class PlaceType extends GeoPlanetResource {
 	public String getUri() {
 		return getClient().getServiceUri() + "/placetype/" + code;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + code;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
+	
+	/**
+	 * NB PlaceTypes are considered equal if they have the same code.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -74,14 +68,18 @@ public class PlaceType extends GeoPlanetResource {
 		PlaceType other = (PlaceType) obj;
 		if (code != other.code)
 			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + code;
+		return result;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "PlaceType [code=" + code + ", description=" + description

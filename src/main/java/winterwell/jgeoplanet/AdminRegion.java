@@ -26,7 +26,8 @@ public class AdminRegion extends GeoPlanetResource {
 	}
 	
 	/**
-	 * @return The name of this administrative region
+	 * Returns the name of this administrative region.
+	 * @return the name of this administrative region.
 	 */
 	public String getName() {
 		return name;

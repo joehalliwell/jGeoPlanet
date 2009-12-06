@@ -22,9 +22,7 @@ import org.json.JSONObject;
  * </p>
  * @author Joe Halliwell <joe@winterwell.com>
  */
-public class PlaceCollection {
-
-	GeoPlanet client;
+public class PlaceCollection extends GeoPlanetResource {
 	Place base;
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
@@ -33,18 +31,18 @@ public class PlaceCollection {
 	int total = -1;
 	
 	PlaceCollection(GeoPlanet client, String query) {
-		this.client = client;
+		super(client);
 		this.query = query;
 	}
 	
 	PlaceCollection(Place place, String relation) {
-		this.client = place.client;
+		super(place.getClient());
 		this.base = place;
 		this.query = relation;
 	}
 	
 	PlaceCollection(PlaceCollection other) {
-		this.client = other.client;
+		super(other.getClient());
 		this.base = other.base;
 		this.query = other.query;
 		this.useShortForm = other.useShortForm;
@@ -166,7 +164,7 @@ public class PlaceCollection {
 		uri.append(";count="); uri.append(count);
 		// Results
 		JSONObject tmp;
-		tmp = client.doGet(uri.toString(), useShortForm);
+		tmp = getClient().doGet(uri.toString(), useShortForm);
 		return processResults(tmp);
 	}
 	
@@ -205,7 +203,7 @@ public class PlaceCollection {
 			List<Place> results = new ArrayList<Place>(count);
 			JSONArray array = tmp.getJSONArray("place");
 			for (int i = 0; i<count; i++) {
-				results.add(new Place(client, array.getJSONObject(i)));
+				results.add(new Place(getClient(), array.getJSONObject(i)));
 			}
 			return results;
 		} catch (JSONException e) {

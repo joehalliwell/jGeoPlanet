@@ -1,11 +1,6 @@
 package winterwell.jgeoplanet;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,10 +28,13 @@ public class GeoPlanetTest {
 	}
 	
 	static void printTestSetupHelp() {
-		String m = "FATAL ERROR! Could not locate application ID.\n" +
+		String m = "" +
+				"***********************************************************************" +
+				"ERROR! Could not locate application ID.\n" +
 				"Please ensure that you have a properties file called '%1$s' on " +
 				"your classpath and that it defines the '%2$s' property correctly. " +
-				"Application IDs are available from %3$s";
+				"Application IDs are available from %3$s" +
+				"***********************************************************************";
 		System.out.println(String.format(m, propertyFile, property, GeoPlanet.appIdUrl));
 	}
 	
@@ -144,7 +142,6 @@ public class GeoPlanetTest {
 		double lat = ed.getCentroid().getLatitude();
 		assert Math.abs(lat - 55) < 1;
 		assert Math.abs(longitude + 3.5) < 1;
-		System.out.println(ed);
 	}
 	
 	@Test
@@ -154,5 +151,23 @@ public class GeoPlanetTest {
 		assert eds.size() == -1;
 		Place ed = eds.get(0);
 		assert eds.size() >= 1;
+	}
+	
+	@Test
+	public void testPlaceType() throws GeoPlanetException {
+		GeoPlanet w = new GeoPlanet(appId);
+		Place paris = w.getPlace("Paris, France");
+		PlaceType town = paris.getPlaceType();
+		assert town.getName() == "Town";
+		assert town.getCode() == 7;
+	}
+	
+	@Test
+	public void testLocalisation() throws GeoPlanetException {
+		GeoPlanet w = new GeoPlanet(appId, "it");
+		Place milan = w.getPlace("Milano, Italia");
+		assert milan.getWoeId() == 718345;
+		assert milan.getClient().getLanguage().startsWith("it");
+		assert milan.getPlaceType().getName().equals("Città");
 	}
 }

@@ -7,5 +7,5 @@ package winterwell.jgeoplanet;
 public class InvalidAppIdException extends GeoPlanetException {
 
 	private static final long serialVersionUID = 3492067671789631252L;
-
+	
 }

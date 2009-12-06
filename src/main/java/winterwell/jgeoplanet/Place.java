@@ -17,13 +17,11 @@ import org.json.JSONObject;
  * @author Joe Halliwell <joe@winterwell.com>
  *
  */
-public class Place {
+public class Place extends GeoPlanetResource {
 
-	GeoPlanet client;
 	private final long woeId;
 	private final String name;
-	private final String placeTypeName;
-	private final int placeTypeCode;
+	private final PlaceType placeType;
 	private String postal;
 	private String locality1;
 	private String locality2;
@@ -41,12 +39,11 @@ public class Place {
 	 * @throws JSONException 
 	 */
 	Place(GeoPlanet client, JSONObject place) throws GeoPlanetException {
-		this.client = client;
+		super(client);
 		try {
 			this.woeId = place.getLong("woeid");
 			this.name = place.getString("name");
-			this.placeTypeName = place.getString("placeTypeName");
-			this.placeTypeCode = place.getJSONObject("placeTypeName attrs").getInt("code"); 
+			this.placeType = client.getPlaceType(place.getString("placeTypeName"));
 			// Long fields
 			if (!place.has("postal")) return;
 
@@ -71,7 +68,7 @@ public class Place {
 		assert i >= 1 && i <= 3;
 		String admin = place.getString("admin" + i);
 		if (admin.equals("")) return null;
-		return new AdminRegion(place, "admin" + i);
+		return new AdminRegion(getClient(), place, "admin" + i);
 	}
 	
 	/**
@@ -89,7 +86,7 @@ public class Place {
 	 */
 	public Place getLongForm() throws GeoPlanetException {
 		if (isLongForm()) return this;
-		return client.getPlace(woeId);
+		return getClient().getPlace(woeId);
 	}
 	
 	/**
@@ -109,25 +106,8 @@ public class Place {
 	/**
 	 * @return the place type e.g. "Country"
 	 */
-	public String getPlaceTypeName() {
-		return placeTypeName;
-	}
-	
-	/**
-	 * Returns the numerical code corresponding to the place type e.g. 7 for a "Town"
-	 * @return the place type code
-	 */
-	public int getPlaceTypeCode() {
-		return placeTypeCode;
-	}
-	
-	/**
-	 * Returns the client that was used to retrieve this place.
-	 * Handy for checking the language.
-	 * @return the client associated with this place
-	 */
-	public GeoPlanet getClient() {
-		return client;
+	public PlaceType getPlaceType() {
+		return placeType;
 	}
 
 	public String getLocality1() {
@@ -197,9 +177,9 @@ public class Place {
 		StringBuilder uri = new StringBuilder("/place/");
 		uri.append(woeId);
 		uri.append("/parent");
-		JSONObject parent = client.doGet(uri.toString(), false);
+		JSONObject parent = getClient().doGet(uri.toString(), false);
 		try {
-			return new Place(client, parent.getJSONObject("place"));
+			return new Place(getClient(), parent.getJSONObject("place"));
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
 		}
@@ -262,72 +242,6 @@ public class Place {
 		return new PlaceCollection(this, "belongtos");
 	}
 	
-	/**
-	 * An administrative region e.g. State, Country, County, Province, District, Ward 
-	 */
-	class AdminRegion {
-		public final String name;
-		public final String type;
-		public final String code;
-		
-		public AdminRegion(JSONObject place, String name) throws JSONException {
-			this.name = place.getString(name);
-			String attrName = name + " attrs";
-			JSONObject attrs = place.getJSONObject(attrName);
-			String code = attrs.getString("code");
-			this.code = (code.equals("") ? null : code);
-			this.type = attrs.getString("type");
-		}
-		
-		/**
-		 * @return The name of this administrative region
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * Returns the type of place this administrative region is. The values
-		 * returned here are presumably place type names as returned by
-		 * {@link Place#getPlaceTypeName()}, but is not covered by the API docs
-		 * and should not be assumed.
-		 * @return The placeType of this administrative region e.g. "Country"
-		 */
-		public String getType() {
-			return type;
-		}
-
-		/**
-		 * Returns a short code for the region e.g. "IT" for Italy. This
-		 * is <em>not</em the same as the (numeric) codes retrieved by {@link Place#placeTypeCode()}.
-		 * May be null if there is no known short code.
-		 * @return A short code for the region. May be null.
-		 */
-		public String getCode() {
-			return code;
-		}
-	}
-	
-	/**
-	 * A geographical location expressed as a latitude and longitude
-	 */
-	class Location {
-		final double longitude;
-		final double latitiude;
-		public Location(JSONObject jsonObject) throws JSONException {
-			this.latitiude = jsonObject.getDouble("latitude");
-			this.longitude = jsonObject.getDouble("longitude");
-		}
-		
-		public double getLongitude() {
-			return longitude;
-		}
-		
-		public double getLatitude() {
-			return latitiude;
-		}
-	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -352,7 +266,8 @@ public class Place {
 	
 	@Override
 	public String toString() {
-		return "Place [name=" + name + ", placeTypeName=" + placeTypeName
-				+ ", woeId=" + woeId + "]";
+		return "Place [name=" + name + ", " +
+					  "placeTypeName=" + placeType + ", " + 
+					  "woeId=" + woeId + "]";
 	}
 }

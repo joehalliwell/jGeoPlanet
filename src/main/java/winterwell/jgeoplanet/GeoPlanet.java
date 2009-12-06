@@ -1,12 +1,16 @@
 package winterwell.jgeoplanet;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,8 +19,11 @@ import org.json.JSONObject;
  * as described at: http://developer.yahoo.com/geo/geoplanet/
  * 
  * <p>
- * All applications require a valid Application ID. These can be
- * obtained from: http://developer.yahoo.com/wsregapp/
+ * All applications require a valid application ID. These can be
+ * obtained from: 
+ * <a href="http://developer.yahoo.com/wsregapp/">http://developer.yahoo.com/wsregapp/</a>.
+ * The application ID is checked when you construct a GeoPlanet object.
+ * This means that network access is required for construction.
  * </p>
  * <p>
  * Example:
@@ -47,6 +54,7 @@ public class GeoPlanet {
 	private final String language;
 	private HttpClient httpClient;
 	private final String serviceUri;
+	private Map<String, PlaceType> placeTypesCache;
 	
 	/**
 	 * Default serviceURI (the Yahoo! implementation) for convenience constructors.
@@ -60,41 +68,63 @@ public class GeoPlanet {
 	
 	/**
 	 * Convenience constructor for English language GeoPlanet applications.
+	 * @see Notes on {@link #GeoPlanet(String, String, String)}
+	 * @throws GeoPlanetException 
 	 */
-	public GeoPlanet(String appId) {
+	public GeoPlanet(String appId) throws GeoPlanetException {
 		this(appId, defaultLanguage);
 	}
 	
 	/**
 	 * Create a client for the GeoPlanet service using the specified
 	 * application ID and language.
+	 * @see Notes on {@link #GeoPlanet(String, String, String)}
 	 * @param appId your application ID
 	 * @param language code for the language to use
+	 * @throws GeoPlanetException 
 	 */
-	public GeoPlanet(String appId, String language) {
+	public GeoPlanet(String appId, String language) throws GeoPlanetException {
 		this(appId, language, defaultServiceUri);
 	}
 	
 	/**
 	 * Create a client for the GeoPlanet service using the specified
 	 * application ID, language and service URI.
+	 * NB All constructors require network access to check the application
+	 * ID and cache localised place types.
 	 * @param appId your application ID
 	 * @param language code for the language to use
 	 * @param serviceUri base URI for GeoPlanet requests 
+	 * @throws GeoPlanetException 
 	 */
-	public GeoPlanet(String appId, String language, String serviceUri) {
+	public GeoPlanet(String appId, String language, String serviceUri) throws GeoPlanetException {
 		this.appId = appId;	
-		this.language = language; // TODO: Validate language
+		this.language = language;
 		this.serviceUri = serviceUri;
 		this.httpClient = new HttpClient();
+		cachePlaceTypes();
 	}
 	
+	/**
+	 * @return the application ID used by this client
+	 */
+	public String getApplicationId() {
+		return appId;
+	}
 	
 	/**
 	 * @return the language used by this client
 	 */
 	public String getLanguage() {
 		return language;
+	}
+	
+	/**
+	 * Returns the base URI used by the client e.g. http://where.yahooapis.com/v1
+	 * @return the base URI used by this client
+	 */
+	public String getServiceUri() {
+		return serviceUri;
 	}
 	
 	/**
@@ -137,6 +167,48 @@ public class GeoPlanet {
 		return new PlaceCollection(this, query);
 	}
 	
+	/**
+	 * @return a Collection of all known PlaceTypes
+	 */
+	public Collection<PlaceType> getPlaceTypes() {
+		return placeTypesCache.values();
+	}
+	
+	/**
+     * Look up a PlaceType by name.
+     * @return the PlaceType corresponding to the provided name, or null.
+	 */
+	public PlaceType getPlaceType(String placeType) {
+		return placeTypesCache.get(placeType);
+	}
+	
+	/**
+	 * Used by the constructor to cache a list of place types.
+	 * @throws GeoPlanetException
+	 */
+	private void cachePlaceTypes() throws GeoPlanetException {
+		if (placeTypesCache == null) {
+			try {
+				placeTypesCache = new HashMap<String, PlaceType>();
+				JSONObject tmp = doGet("/placetypes", false);
+				tmp = tmp.getJSONObject("placeTypes");
+				JSONArray types = tmp.getJSONArray("placeType");
+				for (int i = 0; i < types.length(); i++) {
+					PlaceType type = new PlaceType(this, types.getJSONObject(i));
+					placeTypesCache.put(type.getName(), type);
+				}
+			} catch (JSONException e) {
+				throw new GeoPlanetException(e);
+			}
+		}
+	}
+	
+	/**
+	 * Make a request to the GeoPlanet service.
+	 * All network access goes through this method.
+	 * @throws GeoPlanetException for general errors
+	 * @throws PlaceNotFoundException for not found exceptions
+	 */
 	JSONObject doGet(String path, boolean shortForm) throws GeoPlanetException, PlaceNotFoundException {
 		assert path.startsWith("/");
 		StringBuilder uri = new StringBuilder(serviceUri);

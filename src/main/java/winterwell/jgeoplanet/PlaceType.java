@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A type of place e.g. "Country", "Town"
+ * A type of place such as: Country, Ocean, Town.
  * 
  * @author Joe Halliwell <joe@winterwell.com>
  */
@@ -38,7 +38,8 @@ public class PlaceType extends GeoPlanetResource {
 	}
 
 	/**
-	 * Returns a (possibly localised) natural language description of this place type.
+	 * Returns a natural language description of this place type.
+	 * This does not seem to be correctly localised at present.
 	 * @return the description of this place type
 	 */
 	public String getDescription() {

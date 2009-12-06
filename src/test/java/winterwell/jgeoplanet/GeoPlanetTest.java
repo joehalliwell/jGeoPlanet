@@ -11,6 +11,7 @@ public class GeoPlanetTest {
 	
 	final static String propertyFile = "jgeoplanet.properties";
 	final static String property = "applicationId";
+	static GeoPlanet client;
 	static String appId;
 	
 	@BeforeClass
@@ -21,6 +22,7 @@ public class GeoPlanetTest {
 			properties.load(is);
 			appId = properties.getProperty(property);
 			if (appId == null) throw new Exception("Could not locate property");
+			client = new GeoPlanet(appId);
 		} catch (Exception e) {
 			printTestSetupHelp();
 			throw new Exception(e);
@@ -169,5 +171,19 @@ public class GeoPlanetTest {
 		assert milan.getWoeId() == 718345;
 		assert milan.getClient().getLanguage().startsWith("it");
 		assert milan.getPlaceType().getName().equals("Città");
+	}
+	
+	@Test
+	public void testPlaceTypeNameWierdness() throws GeoPlanetException {
+		GeoPlanet w = new GeoPlanet(appId);
+		Place aland = w.getPlace("Greenland");
+		assert aland.getPlaceType().equals(w.getPlaceType("Country"));
+		assert aland.getPlaceTypeNameVariant().equals("Province");
+	}
+	
+	@Test(expected=InvalidPlaceType.class)
+	public void testInvalidPlaceType() throws GeoPlanetException {
+		GeoPlanet w = new GeoPlanet(appId);
+		w.getPlaceType("Province");
 	}
 }

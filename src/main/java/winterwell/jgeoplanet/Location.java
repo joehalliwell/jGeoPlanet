@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * 
  * @author Joe Halliwell <joe@winterwell.com>
  */
-class Location {
+public class Location {
 	
 	private final double longitude;
 	private final double latitiude;

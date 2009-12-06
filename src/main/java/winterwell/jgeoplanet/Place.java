@@ -22,6 +22,7 @@ public class Place extends GeoPlanetResource {
 	private final long woeId;
 	private final String name;
 	private final PlaceType placeType;
+	private final String placeTypeNameVariant;
 	private String postal;
 	private String locality1;
 	private String locality2;
@@ -33,7 +34,7 @@ public class Place extends GeoPlanetResource {
 	private Location northEast;
 	
 	/**
-	 * Get a place from a woe id
+	 * Construct a place from a JSON representation
 	 * @param woeid
 	 * @throws GeoPlanetException 
 	 * @throws JSONException 
@@ -43,7 +44,16 @@ public class Place extends GeoPlanetResource {
 		try {
 			this.woeId = place.getLong("woeid");
 			this.name = place.getString("name");
-			this.placeType = client.getPlaceType(place.getString("placeTypeName"));
+			
+			// Sometimes the placeTypeName is not canonical
+			placeTypeNameVariant = place.getString("placeTypeName");
+			int placeTypeCode = place.getJSONObject("placeTypeName attrs").getInt("code");
+			this.placeType = client.getPlaceType(placeTypeCode);
+			if (!placeTypeNameVariant.equals(placeType.getName())) {
+				System.out.println("Warning! '" + name + "' " +
+					"claims to be '" + placeTypeNameVariant +"' " +
+					"but is in fact '" + placeType.getName() + "'");
+			}
 			// Long fields
 			if (!place.has("postal")) return;
 
@@ -110,6 +120,17 @@ public class Place extends GeoPlanetResource {
 		return placeType;
 	}
 
+	/**
+	 * Retrieve a variant name for the place type.
+	 * This is usually identical to the name returned by {@link PlaceType#getName()}
+	 * but not always. For example "Aland Islands" has a country code, but type name "Province"
+	 * 
+	 * @return the place type name.
+	 */
+	public String getPlaceTypeNameVariant() {
+		return placeTypeNameVariant;
+	}
+	
 	public String getLocality1() {
 		return locality1;
 	}
@@ -267,7 +288,10 @@ public class Place extends GeoPlanetResource {
 	@Override
 	public String toString() {
 		return "Place [name=" + name + ", " +
-					  "placeTypeName=" + placeType + ", " + 
+					  "placeTypeName=" + placeTypeNameVariant + ", " + 
+					  "placeType=" + placeType + ", " +
 					  "woeId=" + woeId + "]";
 	}
+
+
 }

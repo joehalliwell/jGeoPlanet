@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * An administrative region e.g. State, Country, County, Province, District, Ward.
+ * An administrative region such as: State, Country, County, Province, District, Ward.
  * These are not the same as place types.
  * 
  * @author Joe Halliwell <joe@winterwell.com>
  */
-class AdminRegion extends GeoPlanetResource {
+public class AdminRegion extends GeoPlanetResource {
 	
 	private final String name;
 	private final String type;

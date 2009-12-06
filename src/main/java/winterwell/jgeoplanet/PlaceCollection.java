@@ -26,7 +26,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	Place base;
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
-	String type;
+	PlaceType type;
 	boolean useShortForm = false;
 	int total = -1;
 	
@@ -55,28 +55,44 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * <p>
 	 * May be null to unset the type. Example usage:
 	 * <pre>
-	 * Place earth = woe.getPlace(1);
-	 * List<Place> countries = earth.getChildren().type("Country").get();
+	 * Place earth = g.getPlace(1);
+	 * PlaceType country = g.getPlaceType("Country");
+	 * List<Place> countries = earth.getChildren().type(country).get();
 	 * </pre>
 	 * </p>
-	 * 
-	 * <p>
-	 * Valid place types include "County", "Region", "Town" and "Ward"
-	 * </p>
-	 * @param placeTypeName The place type to filter on. May be null to unset the type.
+	 * @param placeType The place type to filter on. May be null to unset the type.
+	 * @return a version of this collection filtered by the specified type
 	 */
-	public PlaceCollection type(String placeTypeName) {
-		// TODO: Validate the type
-		if (placeTypeName.equals(this.type)) return this;
+	public PlaceCollection type(PlaceType type) {
+		if (type.equals(this.type)) return this;
 		PlaceCollection variant;
 		variant = new PlaceCollection(this);
-		variant.type = placeTypeName;
+		variant.type = type;
 		variant.total = -1;
 		return variant;
-
+	}
+	
+	/**
+	 * Convenience wrapper for {@link #type(PlaceType)}.
+	 * 
+	 * <p>
+	 * Valid place types names include "County", "Region", "Town" and "Ward"
+	 * </p>
+	 * @param placeTypeName the name of a place type. Must be valid.
+	 * @return a version of this collection filtered by the specified type.
+	 * @see #type(PlaceType)
+	 * @throws InvalidPlaceType if the place type is invalid
+	 */
+	public PlaceCollection type(String placeTypeName) throws InvalidPlaceType {
+		return type(getClient().getPlaceType(placeTypeName));
 	}
 
-	public String getType() {
+	/**
+	 * If this collection is filtered by place type, return that type
+	 * otherwise return null.
+	 * @return the place type filter
+	 */
+	public PlaceType getType() {
 		return this.type;
 	}
 	
@@ -102,7 +118,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	private void appendType(StringBuilder sb) {
 		assert type != null;
 		sb.append(".type(");
-		sb.append(type);
+		sb.append(type.getName());
 		sb.append(")");
 	}
 	

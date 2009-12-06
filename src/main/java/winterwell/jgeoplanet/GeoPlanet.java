@@ -16,14 +16,14 @@ import org.json.JSONObject;
 
 /**
  * Java client library for the Yahoo! GeoPlanet service
- * as described at: http://developer.yahoo.com/geo/geoplanet/
- * 
+ * as described at:
+ * <a href="http://developer.yahoo.com/geo/geoplanet/">http://developer.yahoo.com/geo/geoplanet/</a>
  * <p>
  * All applications require a valid application ID. These can be
  * obtained from: 
  * <a href="http://developer.yahoo.com/wsregapp/">http://developer.yahoo.com/wsregapp/</a>.
  * The application ID is checked when you construct a GeoPlanet object.
- * This means that network access is required for construction.
+ * This requires network access.
  * </p>
  * <p>
  * Example:
@@ -52,10 +52,9 @@ public class GeoPlanet {
 	public static String appIdUrl = "http://developer.yahoo.com/wsregapp/";
 	private final String appId;
 	private final String language;
-	private HttpClient httpClient;
 	private final String serviceUri;
-	private Map<String, PlaceType> placeTypesCache;
-	
+	private Map<String, PlaceType> placeTypeNameCache;
+	private Map<Integer, PlaceType> placeTypeCodeCache;
 	/**
 	 * Default serviceURI (the Yahoo! implementation) for convenience constructors.
 	 */
@@ -92,6 +91,7 @@ public class GeoPlanet {
 	 * application ID, language and service URI.
 	 * NB All constructors require network access to check the application
 	 * ID and cache localised place types.
+	 * The official Yahoo! service URI is http://where.yahooapis.com/v1/
 	 * @param appId your application ID
 	 * @param language code for the language to use
 	 * @param serviceUri base URI for GeoPlanet requests 
@@ -101,11 +101,13 @@ public class GeoPlanet {
 		this.appId = appId;	
 		this.language = language;
 		this.serviceUri = serviceUri;
-		this.httpClient = new HttpClient();
 		cachePlaceTypes();
 	}
 	
 	/**
+	 * Return the Yahoo! application ID used by this client.
+	 * Application IDs can be obtained from
+	 * <a href="http://developer.yahoo.com/wsregapp/">http://developer.yahoo.com/wsregapp/</a>.
 	 * @return the application ID used by this client
 	 */
 	public String getApplicationId() {
@@ -113,6 +115,7 @@ public class GeoPlanet {
 	}
 	
 	/**
+	 * Returns the language used by this client such as "en-gb".
 	 * @return the language used by this client
 	 */
 	public String getLanguage() {
@@ -134,9 +137,13 @@ public class GeoPlanet {
 	 */
 	public Place getPlace(long woeId) throws GeoPlanetException {
 		if (woeId < 0) throw new IllegalArgumentException("WOE IDs must be greater than 0");
-		JSONObject place = doGet("/place/" + woeId, false);
+		JSONObject place;
 		try {
+			place = doGet("/place/" + woeId, false);
 			return new Place(this, place.getJSONObject("place"));
+		} catch (PlaceNotFoundException e) {
+			assert e.getPlaceName().equals("WOEID");
+			throw new PlaceNotFoundException(woeId + " (WOE ID)");
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
 		}
@@ -152,7 +159,7 @@ public class GeoPlanet {
 	 */
 	public Place getPlace(String query) throws GeoPlanetException {
 		List<Place> places = getPlaces(query).get(0,1);
-		if (places.size() == 0) throw new PlaceNotFoundException();
+		if (places.size() == 0) throw new PlaceNotFoundException(query);
 		return places.get(0);
 	}
 	
@@ -171,31 +178,48 @@ public class GeoPlanet {
 	 * @return a Collection of all known PlaceTypes
 	 */
 	public Collection<PlaceType> getPlaceTypes() {
-		return placeTypesCache.values();
+		return placeTypeNameCache.values();
 	}
 	
 	/**
      * Look up a PlaceType by name.
-     * @return the PlaceType corresponding to the provided name, or null.
+     * @return the PlaceType corresponding to the provided name.
+	 * @throws InvalidPlaceType if the name is invalid
 	 */
-	public PlaceType getPlaceType(String placeType) {
-		return placeTypesCache.get(placeType);
+	public PlaceType getPlaceType(String placeTypeName) throws InvalidPlaceType {
+		PlaceType type = placeTypeNameCache.get(placeTypeName);
+		if (type == null) throw new InvalidPlaceType(placeTypeName);
+		return type;
+	}
+	
+	/**
+	 * Look up a PlaceType by code.
+	 * @param placeTypeCode a valid place type code
+	 * @return the PlaceType corresponding to the provided code.
+	 * @throws InvalidPlaceType if the code is invalid
+	 */
+	public PlaceType getPlaceType(int placeTypeCode) throws InvalidPlaceType {
+		PlaceType type = placeTypeCodeCache.get(placeTypeCode);
+		if (type == null) throw new InvalidPlaceType(placeTypeCode + " (code)");
+		return type;
 	}
 	
 	/**
 	 * Used by the constructor to cache a list of place types.
 	 * @throws GeoPlanetException
 	 */
-	private void cachePlaceTypes() throws GeoPlanetException {
-		if (placeTypesCache == null) {
+	private synchronized void cachePlaceTypes() throws GeoPlanetException {
+		if (placeTypeNameCache == null) {
 			try {
-				placeTypesCache = new HashMap<String, PlaceType>();
+				placeTypeCodeCache = new HashMap<Integer, PlaceType>();
+				placeTypeNameCache = new HashMap<String, PlaceType>();
 				JSONObject tmp = doGet("/placetypes", false);
 				tmp = tmp.getJSONObject("placeTypes");
 				JSONArray types = tmp.getJSONArray("placeType");
 				for (int i = 0; i < types.length(); i++) {
 					PlaceType type = new PlaceType(this, types.getJSONObject(i));
-					placeTypesCache.put(type.getName(), type);
+					placeTypeCodeCache.put(type.getCode(), type);
+					placeTypeNameCache.put(type.getName(), type);
 				}
 			} catch (JSONException e) {
 				throw new GeoPlanetException(e);
@@ -220,15 +244,16 @@ public class GeoPlanet {
 		uri.append("&lang="); uri.append(language);
 		try {
 			GetMethod get = new GetMethod(URIUtil.encodePathQuery(uri.toString()));
+			HttpClient httpClient = new HttpClient();
 			httpClient.executeMethod(get);
 			String response = get.getResponseBodyAsString();
 			switch (get.getStatusCode()) {
 			case 200:
 				break;
 			case 400:
-				throw new InvalidAppIdException();
+				throw new InvalidAppIdException(appId);
 			case 404:
-				throw new PlaceNotFoundException();
+				throw new PlaceNotFoundException("WOEID");
 			default:
 				throw new GeoPlanetException("Unexpected response from GeoPlanet server: " + get.getStatusLine());
 			}
@@ -252,4 +277,5 @@ public class GeoPlanet {
 	public String toString() {
 		return "WhereOnEarth client [appId=" + appId + ", lang=" + language + "]";
 	}
+
 }

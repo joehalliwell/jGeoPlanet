@@ -7,6 +7,16 @@ import java.util.Properties;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import winterwell.jgeoplanet.GeoPlanet;
+import winterwell.jgeoplanet.GeoPlanetException;
+import winterwell.jgeoplanet.InvalidAppIdException;
+import winterwell.jgeoplanet.InvalidPlaceType;
+import winterwell.jgeoplanet.Place;
+import winterwell.jgeoplanet.PlaceCollection;
+import winterwell.jgeoplanet.PlaceNotFoundException;
+import winterwell.jgeoplanet.PlaceType;
+
+
 public class GeoPlanetTest {
 	
 	final static String propertyFile = "jgeoplanet.properties";

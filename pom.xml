@@ -78,13 +78,13 @@
 		</plugins>
 	</reporting>
 	<distributionManagement>
-  <downloadUrl>https://maven.repo.edu.au/</downloadUrl>
-  <repository>
-    <uniqueVersion>false</uniqueVersion>
-    <id>winterwell-maven-repo</id>
-    <name>Winterwell Maven Repository</name>
-    <url>scp://winterwell.com/home/maven/public/</url>
-    <layout>default</layout>
-  </repository>
-</distributionManagement>
+  	<downloadUrl>https://maven.winterwell.com/</downloadUrl>
+  	<repository>
+    	<uniqueVersion>false</uniqueVersion>
+    	<id>winterwell-maven-repo</id>
+    	<name>Winterwell Maven Repository</name>
+    	<url>scp://winterwell.com/home/maven/public/</url>
+    	<layout>default</layout>
+  	</repository>
+	</distributionManagement>
 </project>

@@ -1,4 +1,4 @@
-package winterwell.jgeoplanet;
+package com.winterwell.jgeoplanet;
 
 import org.json.JSONException;
 import org.json.JSONObject;

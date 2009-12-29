@@ -1,4 +1,4 @@
-package winterwell.jgeoplanet;
+package com.winterwell.jgeoplanet;
 
 /**
  * Thrown if an invalid place type is cited.

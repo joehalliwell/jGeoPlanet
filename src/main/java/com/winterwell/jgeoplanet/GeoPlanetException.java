@@ -1,4 +1,4 @@
-package winterwell.jgeoplanet;
+package com.winterwell.jgeoplanet;
 
 /**
  * Superclass for other exceptions thrown by the library.

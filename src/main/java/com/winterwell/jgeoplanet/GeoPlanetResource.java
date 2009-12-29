@@ -1,4 +1,4 @@
-package winterwell.jgeoplanet;
+package com.winterwell.jgeoplanet;
 
 /**
  * A GeoPlanetResource is a resource bound to a particular GeoPlanet

@@ -23,9 +23,4 @@ public abstract class GeoPlanetResource {
 		return this.client;
 	}
 	
-	@Override
-	public abstract boolean equals(Object other);
-	
-	@Override
-	public abstract int hashCode();
 }

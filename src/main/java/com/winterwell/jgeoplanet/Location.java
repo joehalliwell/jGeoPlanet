@@ -35,6 +35,32 @@ public class Location {
 		return latitiude;
 	}
 
+	protected boolean containedIn(Location northEast, Location southWest) {
+		assert northEast.latitiude >= southWest.latitiude;
+		assert northEast.longitude >= southWest.longitude;
+		return (latitiude <= northEast.latitiude
+				&& longitude <= northEast.longitude
+				&& latitiude >= southWest.latitiude
+				&& longitude >= southWest.longitude);
+	}
+
+	/**
+	 * Rough and ready distance in metres between this and other.
+	 * Uses the Haversine formula
+	 * http://en.wikipedia.org/wiki/Great-circle_distance
+	 * @param other
+	 * @return
+	 */
+	public double distance(Location other) {
+		final double diameterOfEarth = 6378100 * 2;
+		double sin2lat = Math.sin((latitiude - other.latitiude)/2);
+		sin2lat = sin2lat * sin2lat;
+		double sin2long = Math.sin((longitude - other.longitude)/2);
+		sin2long = sin2long * sin2long;
+		return  diameterOfEarth
+			* Math.asin(
+					Math.sqrt(sin2lat + Math.cos(latitiude) * Math.cos(other.latitiude) * sin2long));
+	}
 
 	@Override
 	public int hashCode() {
@@ -71,4 +97,5 @@ public class Location {
 		}
 		return true;
 	}
+
 }

@@ -208,4 +208,35 @@ public class GeoPlanetTest {
 		Place europe = g.getPlace("Europe");
 		assert europe.getCountry() == null;
 	}
+
+	@Test
+	public void testLocationEquality() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place glasgow = g.getPlace("Glasgow");
+
+		GeoPlanet g2 = new GeoPlanet(appId);
+		Place glasgow2 = g2.getPlace("Glasgow");
+
+		assert glasgow.equals(glasgow2);
+		assert glasgow.getCountry().equals(glasgow2.getCountry());
+		assert glasgow.getCentroid().equals(glasgow2.getCentroid());
+	}
+
+	@Test
+	public void testContainment() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place bruntsfield = g.getPlace("Bruntsfield");
+		Place edinburgh = g.getPlace("Edinburgh");
+		assert edinburgh.contains(bruntsfield.getCentroid());
+		assert edinburgh.contains(bruntsfield);
+	}
+
+	@Test
+	public void testDistance() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlace("Edinburgh");
+		Place glasgow = g.getPlace("Glasgow");
+		double distance = edinburgh.getCentroid().distance(glasgow.getCentroid());
+		assert distance >= 700000 && distance <= 80000;
+	}
 }

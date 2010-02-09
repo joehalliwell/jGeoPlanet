@@ -152,6 +152,27 @@ public class Place extends GeoPlanetResource {
 		return northEast;
 	}
 
+	/**
+	 * Determine whether the specified location is contained within the bounding
+	 * box of this region.
+	 * @param location the location to test
+	 * @return true if the location is within this place's bounding box. False otherwise.
+	 */
+	public boolean contains(Location location) {
+		return location.containedIn(northEast, southWest);
+	}
+
+	/**
+	 * Determine whether the specified place is completely within the bounding
+	 * box of this region.
+	 * @param other the place to test
+	 * @return true if the other place is completely contained within this place's bounding box. False otherwise.
+	 */
+	public boolean contains(Place other) {
+		return (other.northEast.containedIn(northEast, southWest)
+				&& other.southWest.containedIn(northEast, southWest));
+	}
+
 	public String getPostal() {
 		return postal;
 	}

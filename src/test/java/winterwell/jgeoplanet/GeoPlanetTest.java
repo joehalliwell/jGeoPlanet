@@ -237,6 +237,6 @@ public class GeoPlanetTest {
 		Place edinburgh = g.getPlace("Edinburgh");
 		Place glasgow = g.getPlace("Glasgow");
 		double distance = edinburgh.getCentroid().distance(glasgow.getCentroid());
-		assert distance >= 700000 && distance <= 80000;
+		assert distance >= 600000 && distance <= 80000;
 	}
 }

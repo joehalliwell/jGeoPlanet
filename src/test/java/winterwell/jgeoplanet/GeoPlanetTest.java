@@ -19,12 +19,12 @@ import com.winterwell.jgeoplanet.PlaceType;
 
 
 public class GeoPlanetTest {
-	
+
 	final static String propertyFile = "jgeoplanet.properties";
 	final static String property = "applicationId";
 	static GeoPlanet client;
 	static String appId;
-	
+
 	@BeforeClass
 	public static void getAppId() throws Exception {
 		Properties properties = new Properties() ;
@@ -39,7 +39,7 @@ public class GeoPlanetTest {
 			throw new Exception(e);
 		}
 	}
-	
+
 	static void printTestSetupHelp() {
 		String m = "" +
 				"***********************************************************************" +
@@ -50,42 +50,42 @@ public class GeoPlanetTest {
 				"***********************************************************************";
 		System.out.println(String.format(m, propertyFile, property, GeoPlanet.appIdUrl));
 	}
-	
+
 	@Test
 	public void testBasic() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
 		assert earth.getName().equals("Earth");
 	}
-	
+
 	@Test(expected=InvalidAppIdException.class)
 	public void testInvalidAppId() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet("invalid-app-id");
 	}
-	
+
 	@Test(expected=PlaceNotFoundException.class)
 	public void testInvalidWoeId() throws GeoPlanetException {
 		client.getPlace(11111111111L);
 	}
-	
+
 	@Test(expected=PlaceNotFoundException.class)
 	public void testNegativeWoeId() throws GeoPlanetException {
 		client.getPlace(-1);
 	}
-	
-	
+
+
 	@Test
 	public void testEdinburgh() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh, UK");
 		assert edinburgh.getWoeId() == 19344 : edinburgh.getWoeId();
 	}
-	
+
 	@Test
 	public void testParent() throws GeoPlanetException {
 		Place lothian = client.getPlace("Lothian");
 		Place parent = lothian.getParent();
 		assert parent.getName().equals("Scotland");
 	}
-	
+
 	@Test
 	public void testChildren() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh, UK");
@@ -94,33 +94,33 @@ public class GeoPlanetTest {
 		Place marchmont = client.getPlace("Marchmont, Edinburgh");
 		assert children.contains(marchmont);
 	}
-	
+
 	@Test
 	public void testSiblings() throws GeoPlanetException {
 		Place marchmont = client.getPlace("Marchmont, Edinburgh");
 		Place bruntsfield = client.getPlace("Bruntsfield, Edinburgh");
 		assert marchmont.getSiblings().get().contains(bruntsfield);
 	}
-	
+
 	@Test
 	public void testAncestors() throws GeoPlanetException {
 		List<Place> anc = client.getPlace("Marchmont, Edinburgh").getAncestors().get();
 		assert anc.contains(client.getPlace("Edinburgh"));
 	}
-	
+
 	@Test
 	public void testNotAPlace() throws GeoPlanetException {
 		List<Place> zs = client.getPlaces("zzzzzzzzzzzzzzzzzzzzz").get();
 		assert zs.size() == 0;
 	}
-	
+
 	@Test(expected=PlaceNotFoundException.class)
 	public void testNoParent() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
 		assert earth.getName().equals("Earth");
 		earth.getParent(); // This should throw a PlaceNotFoundException
 	}
-	
+
 	@Test
 	public void testCountries() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
@@ -131,7 +131,7 @@ public class GeoPlanetTest {
 		Place parent = country.getParent();
 		assert parent.equals(earth);
 	}
-	
+
 	@Test
 	public void testShortForm() throws GeoPlanetException {
 		PlaceCollection p = client.getPlaces("Milan, Italy").shortForm(true);
@@ -139,7 +139,7 @@ public class GeoPlanetTest {
 		assert milan.isLongForm() == false;
 		assert milan.getPostal() == null;
 	}
-	
+
 	@Test
 	public void testLocation() throws GeoPlanetException {
 		Place ed = client.getPlace("Edinburgh, UK");
@@ -148,7 +148,7 @@ public class GeoPlanetTest {
 		assert Math.abs(lat - 55) < 1;
 		assert Math.abs(longitude + 3.5) < 1;
 	}
-	
+
 	@Test
 	public void testSize() throws GeoPlanetException {
 		PlaceCollection eds = client.getPlaces("Edinburgh");
@@ -156,7 +156,7 @@ public class GeoPlanetTest {
 		Place ed = eds.get(0);
 		assert eds.size() >= 1;
 	}
-	
+
 	@Test
 	public void testPlaceType() throws GeoPlanetException {
 		Place paris = client.getPlace("Paris, France");
@@ -164,7 +164,7 @@ public class GeoPlanetTest {
 		assert town.getName().equals("Town") : town.getName();
 		assert town.getCode() == 7 : town.getCode();
 	}
-	
+
 	@Test
 	public void testLocalisation() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId, "it");
@@ -173,19 +173,19 @@ public class GeoPlanetTest {
 		assert milan.getClient().getLanguage().startsWith("it");
 		assert milan.getPlaceType().getName().equals("Città");
 	}
-	
+
 	@Test
 	public void testPlaceTypeNameWierdness() throws GeoPlanetException {
 		Place aland = client.getPlace("Greenland");
 		assert aland.getPlaceType().equals(client.getPlaceType("Country"));
 		assert aland.getPlaceTypeNameVariant().equals("Province");
 	}
-	
+
 	@Test(expected=InvalidPlaceType.class)
 	public void testInvalidPlaceType() throws GeoPlanetException {
 		client.getPlaceType("Province");
 	}
-	
+
 	@Test
 	public void testPlaceEqualities() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId, "it");
@@ -194,8 +194,18 @@ public class GeoPlanetTest {
 		assert milano.getWoeId() == milan.getWoeId();
 		assert milano.equals(milan);
 		assert milano.hashCode() == milan.hashCode();
-		
+
 		assert milano.getPlaceType().equals(milan.getPlaceType());
 		assert milano.getPlaceType().hashCode() == milan.getPlaceType().hashCode();
+	}
+
+	@Test
+	public void testGetCountry() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlace("Edinburgh");
+		assert edinburgh.getCountry().getName().equals("United Kingdom");
+
+		Place europe = g.getPlace("Europe");
+		assert europe.getCountry() == null;
 	}
 }

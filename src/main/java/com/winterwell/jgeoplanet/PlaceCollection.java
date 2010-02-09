@@ -29,18 +29,18 @@ public class PlaceCollection extends GeoPlanetResource {
 	PlaceType type;
 	boolean useShortForm = false;
 	int total = -1;
-	
+
 	PlaceCollection(GeoPlanet client, String query) {
 		super(client);
 		this.query = query;
 	}
-	
+
 	PlaceCollection(Place place, String relation) {
 		super(place.getClient());
 		this.base = place;
 		this.query = relation;
 	}
-	
+
 	PlaceCollection(PlaceCollection other) {
 		super(other.getClient());
 		this.base = other.base;
@@ -48,10 +48,10 @@ public class PlaceCollection extends GeoPlanetResource {
 		this.useShortForm = other.useShortForm;
 		this.total = other.total;
 	}
-	
+
 	/**
 	 * Set the type filter.
-	 * 
+	 *
 	 * <p>
 	 * May be null to unset the type. Example usage:
 	 * <pre>
@@ -71,10 +71,10 @@ public class PlaceCollection extends GeoPlanetResource {
 		variant.total = -1;
 		return variant;
 	}
-	
+
 	/**
 	 * Convenience wrapper for {@link #type(PlaceType)}.
-	 * 
+	 *
 	 * <p>
 	 * Valid place types names include "County", "Region", "Town" and "Ward"
 	 * </p>
@@ -95,7 +95,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	public PlaceType getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 * Return short form places from this query. The default is to use long form.
 	 * @see #isShortForm()
@@ -114,21 +114,21 @@ public class PlaceCollection extends GeoPlanetResource {
 	public boolean isShortForm() {
 		return useShortForm;
 	}
-	
+
 	private void appendType(StringBuilder sb) {
 		assert type != null;
 		sb.append(".type(");
 		sb.append(type.getName());
 		sb.append(")");
 	}
-	
+
 	private void appendQuery(StringBuilder sb) {
 		assert query != null;
-		sb.append(".q("); 
+		sb.append(".q(");
 		sb.append(query);
 		sb.append(")");
 	}
-	
+
 	/**
 	 * Returns the total number of places in this collection if a get() has occurred, or -1
 	 * to indicate that no get has occurred.
@@ -137,7 +137,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	public int size() {
 		return total;
 	}
-	
+
 	/**
 	 * Get a list of (some of) the places contained in this collection.
 	 * Requires network access. Returns an empty list if no results were found.
@@ -183,7 +183,7 @@ public class PlaceCollection extends GeoPlanetResource {
 		tmp = getClient().doGet(uri.toString(), useShortForm);
 		return processResults(tmp);
 	}
-	
+
 	/**
 	 * Get all places in this collection.
 	 * Cosmetic method calling <code>get(0,0)</code>.
@@ -193,7 +193,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	public List<Place> get() throws GeoPlanetException {
 		return get(0, 0);
 	}
-	
+
 	/**
 	 * Get a specific place from this collection.
 	 * Cosmetic method calling <code>get(index, 1).get(0)</code>
@@ -204,13 +204,13 @@ public class PlaceCollection extends GeoPlanetResource {
 	public Place get(int index) throws GeoPlanetException {
 		return get(index, 1).get(0);
 	}
-	
+
 	private List<Place> processResults(JSONObject tmp) throws GeoPlanetException {
 		try {
 			tmp = tmp.getJSONObject("places");
 			total = tmp.getInt("total");
 			if (total == 0) return new ArrayList<Place>(0);
-			
+
 			int start = tmp.getInt("start");
 			int count = tmp.getInt("count");
 			assert start >= 0;

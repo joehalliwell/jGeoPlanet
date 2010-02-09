@@ -22,4 +22,10 @@ public abstract class GeoPlanetResource {
 	public GeoPlanet getClient() {
 		return this.client;
 	}
+	
+	@Override
+	public abstract boolean equals(Object other);
+	
+	@Override
+	public abstract int hashCode();
 }

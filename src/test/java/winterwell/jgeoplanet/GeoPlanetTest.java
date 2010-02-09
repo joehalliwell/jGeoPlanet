@@ -51,6 +51,11 @@ public class GeoPlanetTest {
 		System.out.println(String.format(m, propertyFile, property, GeoPlanet.appIdUrl));
 	}
 
+	@Test(expected=AssertionError.class)
+	public void testAssertionsEnabled() {
+		assert false;
+	}
+	
 	@Test
 	public void testBasic() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
@@ -210,7 +215,7 @@ public class GeoPlanetTest {
 	}
 
 	@Test
-	public void testLocationEquality() throws GeoPlanetException {
+	public void testEquality() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
 		Place glasgow = g.getPlace("Glasgow");
 
@@ -218,8 +223,8 @@ public class GeoPlanetTest {
 		Place glasgow2 = g2.getPlace("Glasgow");
 
 		assert glasgow.equals(glasgow2);
-		assert glasgow.getCountry().equals(glasgow2.getCountry());
 		assert glasgow.getCentroid().equals(glasgow2.getCentroid());
+		assert glasgow.getCountry().equals(glasgow2.getCountry());
 	}
 
 	@Test
@@ -237,7 +242,7 @@ public class GeoPlanetTest {
 		Place edinburgh = g.getPlace("Edinburgh");
 		Place glasgow = g.getPlace("Glasgow");
 		double distance = edinburgh.getCentroid().distance(glasgow.getCentroid());
-		assert distance >= 65000 && distance <= 70000 : distance;
+		assert distance >= 65 && distance <= 70 : distance;
 	}
 	
 	@Test
@@ -246,7 +251,7 @@ public class GeoPlanetTest {
 		Place perth = g.getPlace("Perth, Australia");
 		Place beijing = g.getPlace("Beijing");
 		double distance = perth.getCentroid().distance(beijing.getCentroid());
-		assert distance >= 7999000 && distance <= 8000000 : distance;
+		assert distance >= 7999 && distance <= 8000 : distance;
 	}
 	
 	

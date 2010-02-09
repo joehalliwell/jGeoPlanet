@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class Location {
 
-	private final static double DIAMETER_OF_EARTH = 6378100 * 2;
+	private final static double DIAMETER_OF_EARTH = 6378.1 * 2;
 	
 	private final double longitude;
 	private final double latitiude;
@@ -47,11 +47,12 @@ public class Location {
 	}
 
 	/**
-	 * Rough and ready distance in metres between this and other.
-	 * Uses the Haversine formula
-	 * http://en.wikipedia.org/wiki/Great-circle_distance
+	 * Rough and ready distance in kilometres between this location
+	 * and the specified other.
+	 * Uses the Haversine formula.
+	 * @see http://en.wikipedia.org/wiki/Great-circle_distance
 	 * @param other
-	 * @return
+	 * @return distance in kilometres
 	 */
 	public double distance(Location other) {
 		final double lat = latitiude * Math.PI / 180;

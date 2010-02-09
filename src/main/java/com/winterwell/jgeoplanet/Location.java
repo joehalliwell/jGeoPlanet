@@ -10,6 +10,8 @@ import org.json.JSONObject;
  */
 public class Location {
 
+	private final static double DIAMETER_OF_EARTH = 6378100 * 2;
+	
 	private final double longitude;
 	private final double latitiude;
 
@@ -52,14 +54,18 @@ public class Location {
 	 * @return
 	 */
 	public double distance(Location other) {
-		final double diameterOfEarth = 6378100 * 2;
-		double sin2lat = Math.sin((latitiude - other.latitiude)/2);
+		final double lat = latitiude * Math.PI / 180;
+		final double lon = longitude * Math.PI / 180;
+		final double olat = other.latitiude * Math.PI / 180;
+		final double olon = other.longitude * Math.PI / 180;
+		
+		double sin2lat = Math.sin((lat - olat)/2);
 		sin2lat = sin2lat * sin2lat;
-		double sin2long = Math.sin((longitude - other.longitude)/2);
+		double sin2long = Math.sin((lon - olon)/2);
 		sin2long = sin2long * sin2long;
-		return  diameterOfEarth
+		return  DIAMETER_OF_EARTH
 			* Math.asin(
-					Math.sqrt(sin2lat + Math.cos(latitiude) * Math.cos(other.latitiude) * sin2long));
+					Math.sqrt(sin2lat + Math.cos(lat) * Math.cos(olat) * sin2long));
 	}
 
 	@Override

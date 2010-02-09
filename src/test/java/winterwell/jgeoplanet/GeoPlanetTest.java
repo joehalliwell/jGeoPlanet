@@ -232,11 +232,22 @@ public class GeoPlanetTest {
 	}
 
 	@Test
-	public void testDistance() throws GeoPlanetException {
+	public void testDistanceShort() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
 		Place edinburgh = g.getPlace("Edinburgh");
 		Place glasgow = g.getPlace("Glasgow");
 		double distance = edinburgh.getCentroid().distance(glasgow.getCentroid());
-		assert distance >= 600000 && distance <= 80000;
+		assert distance >= 65000 && distance <= 70000 : distance;
 	}
+	
+	@Test
+	public void testDistanceLong() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place perth = g.getPlace("Perth, Australia");
+		Place beijing = g.getPlace("Beijing");
+		double distance = perth.getCentroid().distance(beijing.getCentroid());
+		assert distance >= 7999000 && distance <= 8000000 : distance;
+	}
+	
+	
 }

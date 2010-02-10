@@ -55,7 +55,7 @@ public class GeoPlanetTest {
 	public void testAssertionsEnabled() {
 		assert false;
 	}
-	
+
 	@Test
 	public void testBasic() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
@@ -244,7 +244,7 @@ public class GeoPlanetTest {
 		double distance = edinburgh.getCentroid().distance(glasgow.getCentroid());
 		assert distance >= 65 && distance <= 70 : distance;
 	}
-	
+
 	@Test
 	public void testDistanceLong() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
@@ -253,6 +253,6 @@ public class GeoPlanetTest {
 		double distance = perth.getCentroid().distance(beijing.getCentroid());
 		assert distance >= 7999 && distance <= 8000 : distance;
 	}
-	
-	
+
+
 }

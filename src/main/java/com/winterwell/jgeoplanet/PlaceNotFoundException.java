@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.winterwell.jgeoplanet;
 
 /**
@@ -10,14 +7,14 @@ package com.winterwell.jgeoplanet;
 public class PlaceNotFoundException extends GeoPlanetException {
 
 	private static final long serialVersionUID = 6987782024287635157L;
-	
-	private String placeName;
-	
+
+	private final String placeName;
+
 	PlaceNotFoundException(String placeName) {
 		super(placeName + " could not be located");
 		this.placeName = placeName;
 	}
-	
+
 	/**
 	 * Return the name (or WOE ID) that could not be found.
 	 * NB If a WOEID the representation has the form "11231 (WOE ID)"

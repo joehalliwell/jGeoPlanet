@@ -27,3 +27,8 @@ they can get the source code for. A credit on your home page with a link-back
 to this page, e.g. built using jGeoPlanet, is the recommended way to do this.
 Your own code can be licensed commercially and you do not have to release the
 source code.
+
+## Verions
+
+0.1.1 Added Place.getCountry()
+0.1.0 Inital release

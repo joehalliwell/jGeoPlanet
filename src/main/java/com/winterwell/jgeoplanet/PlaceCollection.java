@@ -26,8 +26,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	Place base;
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
-	PlaceType type;
-	List<PlaceType> types;
+	PlaceType[] types;
 	boolean useShortForm = false;
 	int total = -1;
 
@@ -48,6 +47,7 @@ public class PlaceCollection extends GeoPlanetResource {
 		this.query = other.query;
 		this.useShortForm = other.useShortForm;
 		this.total = other.total;
+		this.types = other.types;
 	}
 
 	/**
@@ -58,17 +58,24 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * <pre>
 	 * Place earth = g.getPlace(1);
 	 * PlaceType country = g.getPlaceType("Country");
-	 * List<Place> countries = earth.getChildren().type(country).get();
+	 * PlaceType town = g.getPlaceType("Town");
+	 * List<Place> countries = earth.getChildren().type(country, town).get();
 	 * </pre>
 	 * </p>
-	 * @param type The place type to filter on. May be null to unset the type.
+	 * @param types... The place types to filter on. May be null to unset the type.
 	 * @return a version of this collection filtered by the specified type.
+	 * @throws GeoPlanetException
 	 */
-	public PlaceCollection type(PlaceType type) {
-		if (type.equals(this.type)) return this;
+	public PlaceCollection type(PlaceType... types) throws GeoPlanetException {
+		if (types != null && types.length == 0) {
+			return type((PlaceType) null);
+		}
+		if (types != null && types.length > 7) {
+			throw new GeoPlanetException("Cannot specify more than 7 types");
+		}
 		PlaceCollection variant;
 		variant = new PlaceCollection(this);
-		variant.type = type;
+		variant.types = types;
 		variant.total = -1;
 		return variant;
 	}
@@ -79,22 +86,43 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * <p>
 	 * Valid place types names include "County", "Region", "Town" and "Ward"
 	 * </p>
-	 * @param placeTypeName the name of a place type. Must be valid.
+	 * @param placeTypeName the place type name or a comma-delimited list of place type names. Must be valid.
 	 * @return a version of this collection filtered by the specified type.
+	 * @throws GeoPlanetException
 	 * @see #type(PlaceType)
-	 * @throws InvalidPlaceType if the place type is invalid
 	 */
-	public PlaceCollection type(String placeTypeName) throws InvalidPlaceType {
-		return type(getClient().getPlaceType(placeTypeName));
+	public PlaceCollection typename(String placeTypeName) throws GeoPlanetException {
+		if (placeTypeName == null) return type(null);
+		String[] placeTypeNames = placeTypeName.split(",");
+		PlaceType[] placeTypes = new PlaceType[placeTypeNames.length];
+		for (int i = 0; i < placeTypeNames.length; i++) {
+			placeTypes[i] = getClient().getPlaceType(placeTypeNames[i].trim());
+		}
+		return type(placeTypes);
 	}
 
 	/**
-	 * If this collection is filtered by place type, return that type
-	 * otherwise return null.
+	 * If this collection is filtered by a single place type, return that type
+	 * If it is unfiltered, return null.
+	 * If it is filtered on more than one place type throw an exception
+	 * @deprecated Use getTypes() instead
 	 * @return the place type filter
+	 * @throws GeoPlanetException if more than one place type has been specified
 	 */
-	public PlaceType getType() {
-		return this.type;
+	@Deprecated
+	public PlaceType getType() throws GeoPlanetException {
+		if (this.types == null) return null;
+		if (this.types.length != 1) throw new GeoPlanetException("More than one type in filter");
+		return this.types[0];
+	}
+
+	/**
+	 * If this collection is filtered by place type, return the types
+	 * otherwise return null.
+	 * @return
+	 */
+	public PlaceType[] getTypes() {
+		return this.types;
 	}
 
 	/**
@@ -116,10 +144,15 @@ public class PlaceCollection extends GeoPlanetResource {
 		return useShortForm;
 	}
 
-	private void appendType(StringBuilder sb) {
-		assert type != null;
+	private void appendTypes(StringBuilder sb) {
+		assert types != null;
+		assert types.length > 0;
 		sb.append(".type('");
-		sb.append(type.getName());
+		sb.append(types[0].getName());
+		for (int i = 1; i < types.length; i++) {
+			sb.append(",");
+			sb.append(types[i].getName());
+		}
 		sb.append("')");
 	}
 
@@ -153,18 +186,18 @@ public class PlaceCollection extends GeoPlanetResource {
 		StringBuilder uri = new StringBuilder();
 		if (base == null) {
 			uri = new StringBuilder("/places");
-			if (type != null && query != null) {
+			if (types != null && query != null) {
 				uri.append("$and(");
 				appendQuery(uri);
 				uri.append(",");
-				appendType(uri);
+				appendTypes(uri);
 				uri.append(")");
 			}
 			else if (query != null) {
 				appendQuery(uri);
 			}
-			else if (type != null) {
-				appendType(uri);
+			else if (types != null) {
+				appendTypes(uri);
 			}
 		}
 		else {
@@ -172,8 +205,8 @@ public class PlaceCollection extends GeoPlanetResource {
 			uri.append(base.getWoeId());
 			uri.append("/");
 			uri.append(query); // A relation in this case...
-			if (type != null) {
-				appendType(uri);
+			if (types != null) {
+				appendTypes(uri);
 			}
 		}
 		// Matrix parameters

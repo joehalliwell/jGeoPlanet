@@ -129,7 +129,7 @@ public class GeoPlanetTest {
 	@Test
 	public void testCountries() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
-		List<Place> countries = earth.getChildren().type("Country").get();
+		List<Place> countries = earth.getChildren().typename("Country").get();
 		assert countries.size() > 200 : countries.size();
 		Place country = countries.get(0);
 		country.getName();
@@ -254,17 +254,8 @@ public class GeoPlanetTest {
 		assert distance >= 7999 && distance <= 8000 : distance;
 	}
 
-
 	@Test
-	public void multiplePlacetypes() throws GeoPlanetException {
-		GeoPlanet g = new GeoPlanet(appId);
-		Place perth = g.getPlaces("Perth, Australia").type("Town, County").get(0);
-		assert perth != null;
-		assert perth.getName().equals("Perth");
-	}
-
-	@Test
-	public void testFocus() throws GeoPlanetException {
+	public void testFocusWeirdness() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
 		int kents = g.getPlaces("Kent, UK").get().size();
 		int kents2 = g.getPlaces("Kent%2C+UK").get().size();
@@ -272,5 +263,30 @@ public class GeoPlanetTest {
 		assert kents2 <= kents;
 	}
 
+	@Test
+	public void testNullType() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").typename(null).get(0);
+		assert edinburgh != null;
+		assert edinburgh.getName().equals("Edinburgh");
+	}
+
+	@Test
+	public void testMultipleTypenames() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country,Town").get(0);
+		assert edinburgh != null;
+		assert edinburgh.getName().equals("Edinburgh");
+	}
+
+	@Test
+	public void testMultipleTypes() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		PlaceType country = g.getPlaceType("Country");
+		PlaceType town = g.getPlaceType("Town");
+		Place edinburgh = g.getPlaces("Edinburgh, UK").type(country, town).get(0);
+		assert edinburgh != null;
+		assert edinburgh.getName().equals("Edinburgh");
+	}
 
 }

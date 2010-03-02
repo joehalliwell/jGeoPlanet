@@ -157,7 +157,7 @@ public class GeoPlanet {
 	 * @throws GeoPlanetException on general errors
 	 */
 	public Place getPlace(String query) throws GeoPlanetException {
-		List<Place> places = getPlaces(query).get(0,1);
+		List<Place> places = getPlaces(query).get(0, 1);
 		if (places.size() == 0) throw new PlaceNotFoundException(query);
 		return places.get(0);
 	}
@@ -167,9 +167,14 @@ public class GeoPlanet {
 	 * to some extent.
 	 * The query may include an country code to adjust the ordering
 	 * e.g. <code>getPlaces("Edinburgh, UK")</code> vs. <code>getPlaces("Edinburgh, USA")</code>
+	 * Only one comma is permitted.
+	 * TODO: Commas can (it seems) appear in place names.
 	 * @return a {@link PlaceCollection} of places matching the query
 	 */
-	public PlaceCollection getPlaces(String query) {
+	public PlaceCollection getPlaces(String query) throws GeoPlanetException {
+		if (query.indexOf(",") != query.lastIndexOf(",")) {
+			throw new GeoPlanetException("Place queries can only indicate one focus");
+		}
 		return new PlaceCollection(this, query);
 	}
 

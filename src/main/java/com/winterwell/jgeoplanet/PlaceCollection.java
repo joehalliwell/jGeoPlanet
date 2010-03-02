@@ -27,6 +27,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
 	PlaceType type;
+	List<PlaceType> types;
 	boolean useShortForm = false;
 	int total = -1;
 
@@ -117,9 +118,9 @@ public class PlaceCollection extends GeoPlanetResource {
 
 	private void appendType(StringBuilder sb) {
 		assert type != null;
-		sb.append(".type(");
+		sb.append(".type('");
 		sb.append(type.getName());
-		sb.append(")");
+		sb.append("')");
 	}
 
 	private void appendQuery(StringBuilder sb) {

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class Location {
 
 	private final static double DIAMETER_OF_EARTH = 6378.1 * 2;
-	
+
 	private final double longitude;
 	private final double latitiude;
 
@@ -20,6 +20,15 @@ public class Location {
 		this.longitude = jsonObject.getDouble("longitude");
 	}
 
+	/**
+	 * Construct a new location object. Handy for computing distances.
+	 * @param longitude the longitude of the location
+	 * @param latitude the latitiude of the location
+	 */
+	public Location(double longitude, double latitude) {
+		this.longitude = longitude;
+		this.latitiude = latitude;
+	}
 
 	/**
 	 * Returns  the longitude of this location.
@@ -59,7 +68,7 @@ public class Location {
 		final double lon = longitude * Math.PI / 180;
 		final double olat = other.latitiude * Math.PI / 180;
 		final double olon = other.longitude * Math.PI / 180;
-		
+
 		double sin2lat = Math.sin((lat - olat)/2);
 		sin2lat = sin2lat * sin2lat;
 		double sin2long = Math.sin((lon - olon)/2);

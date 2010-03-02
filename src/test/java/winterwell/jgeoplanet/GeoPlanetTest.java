@@ -255,4 +255,22 @@ public class GeoPlanetTest {
 	}
 
 
+	@Test
+	public void multiplePlacetypes() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place perth = g.getPlaces("Perth, Australia").type("Town, County").get(0);
+		assert perth != null;
+		assert perth.getName().equals("Perth");
+	}
+
+	@Test
+	public void testFocus() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		int kents = g.getPlaces("Kent, UK").get().size();
+		int kents2 = g.getPlaces("Kent%2C+UK").get().size();
+		assert kents2 == 1;
+		assert kents2 <= kents;
+	}
+
+
 }

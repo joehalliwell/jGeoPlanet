@@ -1,4 +1,4 @@
-package winterwell.jgeoplanet;
+package com.winterwell.jgeoplanet;
 
 import java.io.InputStream;
 import java.util.List;

@@ -14,6 +14,10 @@ import org.json.JSONObject;
  * 150 countries, plus a significant number of Points of Interest, Colloquial
  * Regions, Airports, Area Codes, Time Zones, and Islands.
  * </p>
+ * <p>
+ * Places are considered equal() if they have the same woeId i.e. independent
+ * of language.
+ * </p>
  * @author Joe Halliwell <joe@winterwell.com>
  *
  */
@@ -31,8 +35,7 @@ public class Place extends GeoPlanetResource {
 	private AdminRegion admin2;
 	private AdminRegion admin3;
 	private Location centroid;
-	private Location southWest;
-	private Location northEast;
+	private BoundingBox bbox;
 
 	/**
 	 * Construct a place from a JSON representation
@@ -68,9 +71,7 @@ public class Place extends GeoPlanetResource {
 			this.admin3 = getAdminRegion(place, "admin3");
 
 			this.centroid = new Location(place.getJSONObject("centroid"));
-			JSONObject bbox = place.getJSONObject("boundingBox");
-			this.southWest = new Location(bbox.getJSONObject("southWest"));
-			this.northEast = new Location(bbox.getJSONObject("northEast"));
+			this.bbox = new BoundingBox(place.getJSONObject("boundingBox"));
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
 		}
@@ -140,28 +141,29 @@ public class Place extends GeoPlanetResource {
 		return locality2;
 	}
 
+	/**
+	 * @return the centroid (centre of mass) of this Place
+	 */
 	public Location getCentroid() {
 		return centroid;
 	}
 
-	public Location getSouthWest() {
-		return southWest;
+	/**
+	 * @return the bounding box of this Place
+	 */
+	public BoundingBox getBoundingBox() {
+		return bbox;
 	}
-
-	public Location getNorthEast() {
-		return northEast;
-	}
-
 	/**
 	 * Determine whether the specified location is contained within the bounding
 	 * box of this region.
 	 * @param location the location to test
 	 * @return true if the location is within this place's bounding box. False otherwise.
 	 */
-	public boolean contains(Location location) {
-		return location.containedIn(northEast, southWest);
+	public boolean contains(Location other) {
+		return bbox.contains(other);
 	}
-
+	
 	/**
 	 * Determine whether the specified place is completely within the bounding
 	 * box of this region.
@@ -169,10 +171,9 @@ public class Place extends GeoPlanetResource {
 	 * @return true if the other place is completely contained within this place's bounding box. False otherwise.
 	 */
 	public boolean contains(Place other) {
-		return (other.northEast.containedIn(northEast, southWest)
-				&& other.southWest.containedIn(northEast, southWest));
+		return bbox.contains(other.bbox);
 	}
-
+	
 	public String getPostal() {
 		return postal;
 	}

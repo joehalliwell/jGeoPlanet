@@ -12,8 +12,8 @@ public class Location {
 
 	private final static double DIAMETER_OF_EARTH = 6378.1 * 2;
 
-	private final double longitude;
-	private final double latitiude;
+	final double longitude;
+	final double latitiude;
 
 	Location(JSONObject jsonObject) throws JSONException {
 		this.latitiude = jsonObject.getDouble("latitude");
@@ -44,15 +44,6 @@ public class Location {
 	 */
 	public double getLatitude() {
 		return latitiude;
-	}
-
-	protected boolean containedIn(Location northEast, Location southWest) {
-		assert northEast.latitiude >= southWest.latitiude;
-		assert northEast.longitude >= southWest.longitude;
-		return (latitiude <= northEast.latitiude
-				&& longitude <= northEast.longitude
-				&& latitiude >= southWest.latitiude
-				&& longitude >= southWest.longitude);
 	}
 
 	/**

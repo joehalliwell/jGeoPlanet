@@ -52,9 +52,8 @@ public class PlaceCollection extends GeoPlanetResource {
 
 	/**
 	 * Set the type filter.
-	 *
 	 * <p>
-	 * May be null to unset the type. Example usage:
+	 * Call with no arguments to unset the type. Example usage:
 	 * <pre>
 	 * Place earth = g.getPlace(1);
 	 * PlaceType country = g.getPlaceType("Country");
@@ -62,17 +61,16 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * List<Place> countries = earth.getChildren().type(country, town).get();
 	 * </pre>
 	 * </p>
-	 * @param types... The place types to filter on. May be null to unset the type.
+	 * @param types... The place types to filter on. If empty, unset the type.
 	 * @return a version of this collection filtered by the specified type.
 	 * @throws GeoPlanetException
 	 */
 	public PlaceCollection type(PlaceType... types) throws GeoPlanetException {
-		if (types != null && types.length == 0) {
-			return type((PlaceType) null);
-		}
-		if (types != null && types.length > 7) {
+		assert types != null;
+		if (types.length > 7) {
 			throw new GeoPlanetException("Cannot specify more than 7 types");
 		}
+		if (types.length == 0) types = null;
 		PlaceCollection variant;
 		variant = new PlaceCollection(this);
 		variant.types = types;
@@ -86,14 +84,16 @@ public class PlaceCollection extends GeoPlanetResource {
 	 * <p>
 	 * Valid place types names include "County", "Region", "Town" and "Ward"
 	 * </p>
-	 * @param placeTypeName the place type name or a comma-delimited list of place type names. Must be valid.
+	 * @param placeTypeNames the place type name or names. These must be valid.
 	 * @return a version of this collection filtered by the specified type.
 	 * @throws GeoPlanetException
 	 * @see #type(PlaceType)
 	 */
-	public PlaceCollection typename(String placeTypeName) throws GeoPlanetException {
-		if (placeTypeName == null) return type(null);
-		String[] placeTypeNames = placeTypeName.split(",");
+	public PlaceCollection typename(String... placeTypeNames) throws GeoPlanetException {
+		assert placeTypeNames != null;
+		if (placeTypeNames.length > 7) {
+			throw new GeoPlanetException("Cannot specify more than 7 types");
+		}
 		PlaceType[] placeTypes = new PlaceType[placeTypeNames.length];
 		for (int i = 0; i < placeTypeNames.length; i++) {
 			placeTypes[i] = getClient().getPlaceType(placeTypeNames[i].trim());

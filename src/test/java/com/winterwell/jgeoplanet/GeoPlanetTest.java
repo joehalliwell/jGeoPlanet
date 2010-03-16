@@ -233,7 +233,7 @@ public class GeoPlanetTest {
 		Place bruntsfield = g.getPlace("Bruntsfield");
 		Place edinburgh = g.getPlace("Edinburgh");
 		assert edinburgh.contains(bruntsfield.getCentroid());
-		assert edinburgh.contains(bruntsfield);
+		assert edinburgh.contains(bruntsfield.getBoundingBox());
 	}
 
 	@Test
@@ -263,14 +263,29 @@ public class GeoPlanetTest {
 		assert kents2 <= kents;
 	}
 
-	@Test
-	public void testNullType() throws GeoPlanetException {
+	@Test(expected=IndexOutOfBoundsException.class)
+	public void testType() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
-		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").typename(null).get(0);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").get(0);
+	}
+	
+	@Test
+	public void testClearTypename() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").typename("").get(0);
 		assert edinburgh != null;
 		assert edinburgh.getName().equals("Edinburgh");
 	}
 
+	@Test
+	public void testClearType() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").type().get(0);
+		assert edinburgh != null;
+		assert edinburgh.getName().equals("Edinburgh");
+	}
+
+	
 	@Test
 	public void testMultipleTypenames() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);

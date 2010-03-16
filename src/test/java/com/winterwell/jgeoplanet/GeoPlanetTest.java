@@ -233,7 +233,7 @@ public class GeoPlanetTest {
 		Place bruntsfield = g.getPlace("Bruntsfield");
 		Place edinburgh = g.getPlace("Edinburgh");
 		assert edinburgh.contains(bruntsfield.getCentroid());
-		assert edinburgh.contains(bruntsfield.getBoundingBox());
+		assert edinburgh.contains(bruntsfield);
 	}
 
 	@Test

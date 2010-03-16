@@ -24,6 +24,14 @@ public class BoundingBox {
 		this.northEast = new Location(bbox.getJSONObject("northEast"));
 	}
 	
+	public Location getNorthEast() {
+		return northEast;
+	}
+	
+	public Location getSouthWest() {
+		return southWest;
+	}
+	
 	/**
 	 * Determine whether the specified location is contained within this bounding
 	 * box.

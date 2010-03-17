@@ -30,5 +30,6 @@ source code.
 
 ## Verions
 
+0.1.2 Support multiple place types; add bounding box. This release breaks API.
 0.1.1 Added Place.getCountry()
 0.1.0 Inital release

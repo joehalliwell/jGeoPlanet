@@ -4,7 +4,7 @@
 	<groupId>com.winterwell</groupId>
 	<artifactId>jgeoplanet</artifactId>
 	<name>jGeoPlanet</name>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<description>Java client for Yahoo's GeoPlanet (AKA Where On Earth) service. Provides a way to look up WOE IDs as used by Twitter and FireEagle.</description>
 	<dependencies>
 		<dependency>

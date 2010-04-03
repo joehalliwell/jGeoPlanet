@@ -16,8 +16,6 @@ import com.winterwell.jgeoplanet.PlaceCollection;
 import com.winterwell.jgeoplanet.PlaceNotFoundException;
 import com.winterwell.jgeoplanet.PlaceType;
 
-
-
 public class GeoPlanetTest {
 
 	final static String propertyFile = "jgeoplanet.properties";
@@ -158,7 +156,7 @@ public class GeoPlanetTest {
 	public void testSize() throws GeoPlanetException {
 		PlaceCollection eds = client.getPlaces("Edinburgh");
 		assert eds.size() == -1;
-		Place ed = eds.get(0);
+		eds.get(0);
 		assert eds.size() >= 1;
 	}
 
@@ -329,4 +327,31 @@ public class GeoPlanetTest {
 		assert b.intersects(a);
 	}
 
+	@Test
+	public void testCollections() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place london = g.getPlace("London, UK");
+		london.getChildren().get();
+		london.getAncestors().get();
+		london.getBelongTos().get();
+		london.getDescendents().get();
+	}
+	
+	@Test
+	public void testFijiAncestors() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place fiji = g.getPlace("Fiji");
+		List<Place> towns = fiji.getAncestors().get();
+	}
+	
+	@Test
+	public void testFiji() throws GeoPlanetException {
+		GeoPlanet g = new GeoPlanet(appId);
+		Place fiji = g.getPlace("Fiji");
+		Place suva = g.getPlace("Suva");
+		List<Place> towns = fiji.getDescendents().typename("Town").get();
+		assert towns.contains(suva);
+		assert fiji.contains(suva);
+	}
+	
 }

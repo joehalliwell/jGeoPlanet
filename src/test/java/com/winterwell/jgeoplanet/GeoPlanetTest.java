@@ -272,7 +272,7 @@ public class GeoPlanetTest {
 	@Test
 	public void testClearTypename() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
-		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").typename("").get(0);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country").typename().get(0);
 		assert edinburgh != null;
 		assert edinburgh.getName().equals("Edinburgh");
 	}
@@ -289,7 +289,7 @@ public class GeoPlanetTest {
 	@Test
 	public void testMultipleTypenames() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
-		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country,Town").get(0);
+		Place edinburgh = g.getPlaces("Edinburgh, UK").typename("Country","Town").get(0);
 		assert edinburgh != null;
 		assert edinburgh.getName().equals("Edinburgh");
 	}

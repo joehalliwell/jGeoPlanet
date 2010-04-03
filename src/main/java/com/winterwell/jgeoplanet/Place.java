@@ -254,7 +254,7 @@ public class Place extends GeoPlanetResource {
 	 * the child of child, etc.). 
 	 */
 	public PlaceCollection getDescendents() {
-		return new PlaceCollection(this, "descendents");
+		return new PlaceCollection(this, "descendants");
 	}
 	
 	/**

@@ -243,11 +243,20 @@ public class Place extends GeoPlanetResource {
 	 * 58 counties, as well as its colloquial entities (High Sierra, Wine
 	 * Country, Central Valley, etc.), and Zones (MSA Redding, MSA Salinas, etc.).
 	 * @return the children of this place
+	 * @see #getDescendents()
 	 */
 	public PlaceCollection getChildren() {
 		return new PlaceCollection(this, "children");
 	}
-
+	
+	/**
+	 * Returns a collection of places in the child hierarchy (the child,
+	 * the child of child, etc.). 
+	 */
+	public PlaceCollection getDescendents() {
+		return new PlaceCollection(this, "descendents");
+	}
+	
 	/**
 	 * Places adjacent to a given place. For example, California (WOEID 2347563)
 	 * is adjacent to Nevada (WOEID 2347587), Oregon (WOEID 2347596), Arizona

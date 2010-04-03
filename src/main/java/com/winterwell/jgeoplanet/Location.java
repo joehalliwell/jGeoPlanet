@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A geographical location expressed as a latitude and longitude
+ * A geographical location expressed as a latitude and longitude.
  *
  * @author Joe Halliwell <joe@winterwell.com>
  */
@@ -23,8 +23,8 @@ public class Location {
 	/**
 	 * Construct a new location object. Handy for computing distances.
 	 * 
-	 * @param latitude the latitiude of the location
-	 * @param longitude the longitude of the location
+	 * @param latitude the latitiude of the location. Must be >-90 and <90
+	 * @param longitude the longitude of the location. Must be >-180 and <180
 	 * @throws IllegalArgumentException if the co-ordinates aren't valid
 	 */
 	public Location(double latitude, double longitude) {
@@ -112,6 +112,11 @@ public class Location {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Location (" + latitiude + " N, " + longitude + " E)";
 	}
 
 }

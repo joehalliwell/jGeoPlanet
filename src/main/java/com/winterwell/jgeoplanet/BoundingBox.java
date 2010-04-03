@@ -102,5 +102,11 @@ public class BoundingBox {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "BoundingBox [northEast=" + northEast + ", southWest="
+				+ southWest + "]";
+	}
 	
 }

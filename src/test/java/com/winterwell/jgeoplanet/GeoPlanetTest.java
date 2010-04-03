@@ -303,5 +303,30 @@ public class GeoPlanetTest {
 		assert edinburgh != null;
 		assert edinburgh.getName().equals("Edinburgh");
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInvalidLatitude() {
+		new Location(91, 0);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInvalidLongitude() {
+		new Location(0, -181);
+	}
+	
+	@Test 
+	public void testBoundingBox() {
+		BoundingBox b = new BoundingBox(
+				new Location(10,10),
+				new Location(-10,-10));
+	}
+	
+	@Test 
+	public void testIntersection() {
+		BoundingBox a = new BoundingBox(new Location(10, 10), new Location(-10, -10));
+		BoundingBox b = new BoundingBox(new Location(15, 15), new Location(5, 5));
+		assert a.intersects(b);
+		assert b.intersects(a);
+	}
 
 }

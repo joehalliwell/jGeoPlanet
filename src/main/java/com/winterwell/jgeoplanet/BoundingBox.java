@@ -32,6 +32,14 @@ public class BoundingBox {
 		return southWest;
 	}
 	
+	public Location getNorthWest() {
+		return new Location(southWest.longitude, northEast.latitiude);
+	}
+	
+	public Location getSouthEast() {
+		return new Location(northEast.longitude, southWest.latitiude);
+	}
+	
 	/**
 	 * Determine whether the specified location is contained within this bounding
 	 * box.
@@ -58,8 +66,8 @@ public class BoundingBox {
 	public boolean intersects(BoundingBox other) {
 		return (contains(other.northEast)
 				|| contains(other.southWest)
-				|| other.contains(this.northEast)
-				|| other.contains(this.southWest));
+				|| contains(other.getNorthWest())
+				|| contains(other.getSouthEast()));
 	}
 	
 	@Override

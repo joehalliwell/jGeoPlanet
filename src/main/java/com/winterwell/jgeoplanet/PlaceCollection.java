@@ -53,7 +53,8 @@ public class PlaceCollection extends GeoPlanetResource {
 	/**
 	 * Set the type filter.
 	 * <p>
-	 * Call with no arguments to unset the type. Example usage:
+	 * A call to type() i.e. with no arguments unsets the type filter.
+	 * Example usage:
 	 * <pre>
 	 * Place earth = g.getPlace(1);
 	 * PlaceType country = g.getPlaceType("Country");
@@ -80,10 +81,13 @@ public class PlaceCollection extends GeoPlanetResource {
 
 	/**
 	 * Convenience wrapper for {@link #type(PlaceType)}.
-	 *
+	 * <p>
+	 * A call to typename() i.e. with no arguments resets the type filter.
+	 * </p>
 	 * <p>
 	 * Valid place types names include "County", "Region", "Town" and "Ward"
 	 * </p>
+	 * 
 	 * @param placeTypeNames the place type name or names. These must be valid.
 	 * @return a version of this collection filtered by the specified type.
 	 * @throws GeoPlanetException

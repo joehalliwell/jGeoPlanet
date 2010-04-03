@@ -20,8 +20,8 @@ public class BoundingBox {
 	}
 	
 	BoundingBox(JSONObject bbox) throws JSONException {
-		this.southWest = new Location(bbox.getJSONObject("southWest"));
-		this.northEast = new Location(bbox.getJSONObject("northEast"));
+		this(	new Location(bbox.getJSONObject("northEast")), 
+				new Location(bbox.getJSONObject("southWest")));
 	}
 	
 	public Location getNorthEast() {

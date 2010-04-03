@@ -16,26 +16,26 @@ public class Location {
 	final double latitiude;
 
 	Location(JSONObject jsonObject) throws JSONException {
-		this.latitiude = jsonObject.getDouble("latitude");
-		this.longitude = jsonObject.getDouble("longitude");
+		this(jsonObject.getDouble("latitude"),
+			 jsonObject.getDouble("longitude"));
 	}
 
 	/**
 	 * Construct a new location object. Handy for computing distances.
-	 * @param longitude the longitude of the location
+	 * 
 	 * @param latitude the latitiude of the location
+	 * @param longitude the longitude of the location
+	 * @throws IllegalArgumentException if the co-ordinates aren't valid
 	 */
-	public Location(double longitude, double latitude) {
-		this.longitude = longitude;
+	public Location(double latitude, double longitude) {
+		if (latitude < -90 || latitude > 90) {
+			throw new IllegalArgumentException("Invalid latitude: " + latitude);
+		}
+		if (longitude < -180 || longitude > 180) {
+			throw new IllegalArgumentException("Invalid longitude: " + longitude);
+		}
 		this.latitiude = latitude;
-	}
-
-	/**
-	 * Returns  the longitude of this location.
-	 * @return the longitude of this location.
-	 */
-	public double getLongitude() {
-		return longitude;
+		this.longitude = longitude;
 	}
 
 	/**
@@ -45,6 +45,15 @@ public class Location {
 	public double getLatitude() {
 		return latitiude;
 	}
+	
+	/**
+	 * Returns  the longitude of this location.
+	 * @return the longitude of this location.
+	 */
+	public double getLongitude() {
+		return longitude;
+	}
+
 
 	/**
 	 * Rough and ready distance in kilometres between this location

@@ -1,5 +1,7 @@
 package com.winterwell.jgeoplanet;
 
+import java.util.Comparator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,9 +62,13 @@ public class Place extends GeoPlanetResource {
 					"has type name '" + placeTypeNameVariant +"' " +
 					"but type code '" + placeType.getName() + "'");
 			}
-			// Long fields
-			if (!place.has("postal")) return;
-
+			
+			// Long fields			
+			if (!place.has("centroid")) return;
+			
+			this.centroid = new Location(place.getJSONObject("centroid"));
+			this.bbox = new BoundingBox(place.getJSONObject("boundingBox"));
+			
 			this.postal = place.getString("postal");
 			this.locality1 = place.getString("locality1");
 			this.locality2 = place.getString("locality2");
@@ -72,11 +78,9 @@ public class Place extends GeoPlanetResource {
 			this.admin2 = getAdminRegion(place, "admin2");
 			this.admin3 = getAdminRegion(place, "admin3");
 
-			//this.popRank = place.getLong("popRank");
-			//this.areaRank = place.getLong("areaRank");
-			
-			this.centroid = new Location(place.getJSONObject("centroid"));
-			this.bbox = new BoundingBox(place.getJSONObject("boundingBox"));
+			this.popRank = place.getLong("popRank");
+			this.areaRank = place.getLong("areaRank");
+
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
 		}
@@ -221,6 +225,14 @@ public class Place extends GeoPlanetResource {
 		return admin3;
 	}
 
+	public Long getPopulationRank() {
+		return popRank;
+	}
+	
+	public Long getAreaRank() {
+		return areaRank;
+	}
+	
 	/**
 	 * Get the parent of this place: its direct superior in the hierarchy.
 	 * For example, California (WOEID 2347563) is a child of the United
@@ -241,7 +253,26 @@ public class Place extends GeoPlanetResource {
 			throw new GeoPlanetException(e);
 		}
 	}
-
+	
+	/**
+	 * Return the smallest common ancestor of two places
+	 * @param the other child to consider
+	 * @return the smallest common ancestor
+	 * @throws GeoPlanetException 
+	 */
+	public Place getCommonAncestor(Place other) throws GeoPlanetException {
+		StringBuilder uri = new StringBuilder("/place/");
+		uri.append(woeId);
+		uri.append("/common/");
+		uri.append(other.woeId);
+		JSONObject parent = getClient().doGet(uri.toString(), false);
+		try {
+			return new Place(getClient(), parent.getJSONObject("place"));
+		} catch (JSONException e) {
+			throw new GeoPlanetException(e);
+		}
+	}
+	
 	/**
 	 * The direct inferiors to a given place. Children can be of different
 	 * place types, so the children of California (WOEID 2347563) include its
@@ -308,6 +339,26 @@ public class Place extends GeoPlanetResource {
 		return new PlaceCollection(this, "belongtos");
 	}
 
+	/**
+	 * A comparator that orders places by population rank
+	 */
+	public static Comparator<Place> POPULATION_ORDER = new Comparator<Place>() {
+		@Override
+		public int compare(Place a, Place b) {
+			return (a.getPopulationRank().compareTo(b.getPopulationRank()));
+		}
+	};
+	
+	/**
+	 * A comparator that orders places by area rank
+	 */
+	public static Comparator<Place> AREA_ORDER = new Comparator<Place>() {
+		@Override
+		public int compare(Place a, Place b) {
+			return (a.getAreaRank().compareTo(b.getAreaRank()));
+		}
+	};
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -333,8 +384,8 @@ public class Place extends GeoPlanetResource {
 	@Override
 	public String toString() {
 		return "Place [name=" + name + ", " +
-					  "placeTypeName=" + placeTypeNameVariant + ", " +
-					  "placeType=" + placeType + ", " +
+					  //"placeTypeName=" + placeTypeNameVariant + ", " +
+					  //"placeType=" + placeType + ", " +
 					  "woeId=" + woeId + "]";
 	}
 

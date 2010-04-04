@@ -73,5 +73,39 @@ public class PlaceTest extends GeoPlanetTest {
 		assert europe.getCountry() == null;
 	}
 
+	/**
+	 * This currently fails: common doesn't provide json?
+	 */
+	@Test
+	public void testCommonAncestor() throws GeoPlanetException {
+		Place edinburgh = client.getPlace("Edinburgh");
+		Place london = client.getPlace("London");
+		
+		Place ancestor = edinburgh.getCommonAncestor(london);
+		System.out.println(ancestor);
+	}
+	
+	@Test
+	public void testRankFields() throws GeoPlanetException {
+		Place bruntsfield = client.getPlace("Bruntsfield");
+		bruntsfield.getPopulationRank();
+		bruntsfield.getAreaRank();
+	}
+	
+	@Test
+	public void testAreaOrder() throws GeoPlanetException {
+		Place edinburgh = client.getPlace("Edinburgh");
+		Place london = client.getPlace("London");
+		assert Place.AREA_ORDER.compare(edinburgh, london) < 0;
+		assert Place.AREA_ORDER.compare(london, edinburgh) > 0;
+	}
+	
+	@Test
+	public void testPopulationOrder() throws GeoPlanetException {
+		Place edinburgh = client.getPlace("Edinburgh");
+		Place london = client.getPlace("London");
+		assert Place.POPULATION_ORDER.compare(edinburgh, london) < 0;
+		assert Place.POPULATION_ORDER.compare(london, edinburgh) > 0;
+	}
 	
 }

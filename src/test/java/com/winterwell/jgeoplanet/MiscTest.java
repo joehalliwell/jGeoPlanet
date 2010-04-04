@@ -77,11 +77,10 @@ public class MiscTest extends GeoPlanetTest {
 		Place suva = client.getPlace("Suva");
 		List<Place> towns = fiji.getDescendents().typename("Town").get();
 
-		System.out.println(suva.getCentroid());
+		System.out.println(suva.getBoundingBox());
 		System.out.println(fiji.getBoundingBox());
 		
 		assert towns.contains(suva);
 		assert fiji.contains(suva);
-		System.out.println(suva.getCentroid());
 	}
 }

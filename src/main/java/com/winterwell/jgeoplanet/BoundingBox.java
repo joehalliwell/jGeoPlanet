@@ -3,8 +3,6 @@ package com.winterwell.jgeoplanet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sun.org.apache.bcel.internal.generic.LLOAD;
-
 /**
  * A region of the Earth's surface defined by four corners and some
  * great circles.

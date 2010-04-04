@@ -41,7 +41,7 @@ public class PlaceCollectionTest extends GeoPlanetTest {
 	
 	@Test
 	public void testDescendents() throws GeoPlanetException {
-		List<Place> desc = client.getPlace("Edinburgh").getDescendents().get();
+		List<Place> desc = client.getPlace("UK").getDescendents().get();
 	}
 
 	@Test

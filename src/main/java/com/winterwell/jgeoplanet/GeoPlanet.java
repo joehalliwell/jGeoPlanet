@@ -177,7 +177,7 @@ public class GeoPlanet {
 		}
 		return new PlaceCollection(this, query);
 	}
-
+	
 	/**
 	 * @return a Collection of all known PlaceTypes
 	 */

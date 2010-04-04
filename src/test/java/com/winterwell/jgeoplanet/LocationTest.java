@@ -3,6 +3,7 @@ package com.winterwell.jgeoplanet;
 import org.junit.Test;
 /**
  * Tests for location and bounding box logic
+ * 
  * @author Joe Halliwell <joe@winterwell.com>
  *
  */
@@ -32,8 +33,6 @@ public class LocationTest extends GeoPlanetTest {
 		bbox = new BoundingBox(new Location(10,-10), new Location(-10,10));
 		assert !bbox.contains(new Location(0,0));
 	}
-	
-	
 
 	@Test
 	public void testDistanceShort() throws GeoPlanetException {

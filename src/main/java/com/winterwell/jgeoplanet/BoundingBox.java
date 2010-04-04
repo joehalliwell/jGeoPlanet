@@ -3,6 +3,8 @@ package com.winterwell.jgeoplanet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sun.org.apache.bcel.internal.generic.LLOAD;
+
 /**
  * A region of the Earth's surface defined by four corners and some
  * great circles.
@@ -15,6 +17,9 @@ public class BoundingBox {
 	final Location southWest;
 	
 	public BoundingBox(Location northEast, Location southWest) {
+		if (northEast.latitude < southWest.latitude) {
+			throw new IllegalArgumentException("North east corner is south of south west corner");
+		}
 		this.northEast = northEast;
 		this.southWest = southWest;
 	}
@@ -33,11 +38,11 @@ public class BoundingBox {
 	}
 	
 	public Location getNorthWest() {
-		return new Location(southWest.longitude, northEast.latitiude);
+		return new Location(southWest.longitude, northEast.latitude);
 	}
 	
 	public Location getSouthEast() {
-		return new Location(northEast.longitude, southWest.latitiude);
+		return new Location(northEast.longitude, southWest.latitude);
 	}
 	
 	/**
@@ -47,12 +52,19 @@ public class BoundingBox {
 	 * @return true if the location is within this bounding box. False otherwise.
 	 */
 	public boolean contains(Location location) {
-		return (location.latitiude <= northEast.latitiude
-				&& location.latitiude >= southWest.latitiude
-				&& location.longitude <= northEast.longitude
-				&& location.longitude >= southWest.longitude);
+		if (location.latitude > northEast.latitude) return false;
+		if (location.latitude < southWest.latitude) return false;
+		if (northEast.longitude < 0	&& southWest.longitude >= 0 && southWest.longitude > northEast.longitude) {
+			if (location.longitude < 0 && location.longitude > northEast.longitude) return false;
+			if (location.longitude >= 0 && location.longitude < southWest.longitude) return false;
+		}
+		else {
+			if (location.longitude > northEast.longitude) return false;
+			if (location.longitude < southWest.longitude) return false;
+		}
+		return true;
 	}
-	
+		
 	/**
 	 * Determine whether the specified bounding box is completely contained 
 	 * within this one.

@@ -256,6 +256,7 @@ public class GeoPlanet {
 			case 400:
 				throw new InvalidAppIdException(appId);
 			case 404:
+				// TODO: Collections seem to throw this sometimes
 				throw new PlaceNotFoundException("WOEID");
 			default:
 				throw new GeoPlanetException("Unexpected response from GeoPlanet server: " + get.getStatusLine());

@@ -36,7 +36,9 @@ public class Place extends GeoPlanetResource {
 	private AdminRegion admin3;
 	private Location centroid;
 	private BoundingBox bbox;
-
+	private long popRank;
+	private long areaRank;
+	
 	/**
 	 * Construct a place from a JSON representation
 	 * @param woeid
@@ -70,6 +72,9 @@ public class Place extends GeoPlanetResource {
 			this.admin2 = getAdminRegion(place, "admin2");
 			this.admin3 = getAdminRegion(place, "admin3");
 
+			//this.popRank = place.getLong("popRank");
+			//this.areaRank = place.getLong("areaRank");
+			
 			this.centroid = new Location(place.getJSONObject("centroid"));
 			this.bbox = new BoundingBox(place.getJSONObject("boundingBox"));
 		} catch (JSONException e) {

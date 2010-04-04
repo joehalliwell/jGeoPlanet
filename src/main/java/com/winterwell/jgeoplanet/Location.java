@@ -13,7 +13,7 @@ public class Location {
 	private final static double DIAMETER_OF_EARTH = 6378.1 * 2;
 
 	final double longitude;
-	final double latitiude;
+	final double latitude;
 
 	Location(JSONObject jsonObject) throws JSONException {
 		this(jsonObject.getDouble("latitude"),
@@ -34,7 +34,7 @@ public class Location {
 		if (longitude < -180 || longitude > 180) {
 			throw new IllegalArgumentException("Invalid longitude: " + longitude);
 		}
-		this.latitiude = latitude;
+		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
@@ -43,11 +43,11 @@ public class Location {
 	 * @return the latitude of this location.
 	 */
 	public double getLatitude() {
-		return latitiude;
+		return latitude;
 	}
 	
 	/**
-	 * Returns  the longitude of this location.
+	 * Returns  the longitude of this location. A number between -180 and 180.
 	 * @return the longitude of this location.
 	 */
 	public double getLongitude() {
@@ -64,9 +64,9 @@ public class Location {
 	 * @return distance in kilometres
 	 */
 	public double distance(Location other) {
-		final double lat = latitiude * Math.PI / 180;
+		final double lat = latitude * Math.PI / 180;
 		final double lon = longitude * Math.PI / 180;
-		final double olat = other.latitiude * Math.PI / 180;
+		final double olat = other.latitude * Math.PI / 180;
 		final double olon = other.longitude * Math.PI / 180;
 
 		double sin2lat = Math.sin((lat - olat)/2);
@@ -83,7 +83,7 @@ public class Location {
 		final int prime = 31;
 		int result = 1;
 		long temp;
-		temp = Double.doubleToLongBits(latitiude);
+		temp = Double.doubleToLongBits(latitude);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(longitude);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -103,8 +103,8 @@ public class Location {
 			return false;
 		}
 		Location other = (Location) obj;
-		if (Double.doubleToLongBits(latitiude) != Double
-				.doubleToLongBits(other.latitiude)) {
+		if (Double.doubleToLongBits(latitude) != Double
+				.doubleToLongBits(other.latitude)) {
 			return false;
 		}
 		if (Double.doubleToLongBits(longitude) != Double
@@ -116,7 +116,7 @@ public class Location {
 
 	@Override
 	public String toString() {
-		return "Location (" + latitiude + " N, " + longitude + " E)";
+		return "Location (" + latitude + " N, " + longitude + " E)";
 	}
 
 }

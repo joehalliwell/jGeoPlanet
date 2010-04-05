@@ -40,7 +40,7 @@ public class Place extends GeoPlanetResource {
 	private BoundingBox bbox;
 	private long popRank;
 	private long areaRank;
-	
+
 	/**
 	 * Construct a place from a JSON representation
 	 * @param woeid
@@ -62,13 +62,13 @@ public class Place extends GeoPlanetResource {
 					"has type name '" + placeTypeNameVariant +"' " +
 					"but type code '" + placeType.getName() + "'");
 			}
-			
-			// Long fields			
+
+			// Long fields
 			if (!place.has("centroid")) return;
-			
+
 			this.centroid = new Location(place.getJSONObject("centroid"));
 			this.bbox = new BoundingBox(place.getJSONObject("boundingBox"));
-			
+
 			this.postal = place.getString("postal");
 			this.locality1 = place.getString("locality1");
 			this.locality2 = place.getString("locality2");
@@ -166,23 +166,25 @@ public class Place extends GeoPlanetResource {
 	/**
 	 * Determine whether the specified location is contained within the bounding
 	 * box of this region.
+	 * Convenience for this.getBoundingBox().contains(other).
 	 * @param location the location to test
 	 * @return true if the location is within this place's bounding box. False otherwise.
 	 */
 	public boolean contains(Location other) {
 		return bbox.contains(other);
 	}
-	
+
 	/**
 	 * Determine whether the specified place is completely within the bounding
 	 * box of this region.
+	 * Convenience for this.getBoundingBox().contains(other.getBoundingBox()).
 	 * @param other the place to test
 	 * @return true if the other place is completely contained within this place's bounding box. False otherwise.
 	 */
 	public boolean contains(Place other) {
 		return bbox.contains(other.bbox);
 	}
-	
+
 	public String getPostal() {
 		return postal;
 	}
@@ -225,14 +227,22 @@ public class Place extends GeoPlanetResource {
 		return admin3;
 	}
 
+	/**
+	 * TODO: Link to explanation of codes
+	 * @return the population rank
+	 */
 	public Long getPopulationRank() {
 		return popRank;
 	}
-	
+
+	/**
+	 * TODO: Link to explanation of codes
+	 * @return the area rank
+	 */
 	public Long getAreaRank() {
 		return areaRank;
 	}
-	
+
 	/**
 	 * Get the parent of this place: its direct superior in the hierarchy.
 	 * For example, California (WOEID 2347563) is a child of the United
@@ -253,12 +263,12 @@ public class Place extends GeoPlanetResource {
 			throw new GeoPlanetException(e);
 		}
 	}
-	
+
 	/**
 	 * Return the smallest common ancestor of two places
 	 * @param the other child to consider
 	 * @return the smallest common ancestor
-	 * @throws GeoPlanetException 
+	 * @throws GeoPlanetException
 	 */
 	public Place getCommonAncestor(Place other) throws GeoPlanetException {
 		StringBuilder uri = new StringBuilder("/place/");
@@ -272,7 +282,7 @@ public class Place extends GeoPlanetResource {
 			throw new GeoPlanetException(e);
 		}
 	}
-	
+
 	/**
 	 * The direct inferiors to a given place. Children can be of different
 	 * place types, so the children of California (WOEID 2347563) include its
@@ -284,15 +294,15 @@ public class Place extends GeoPlanetResource {
 	public PlaceCollection getChildren() {
 		return new PlaceCollection(this, "children");
 	}
-	
+
 	/**
 	 * Returns a collection of places in the child hierarchy (the child,
-	 * the child of child, etc.). 
+	 * the child of child, etc.).
 	 */
 	public PlaceCollection getDescendents() {
 		return new PlaceCollection(this, "descendants");
 	}
-	
+
 	/**
 	 * Places adjacent to a given place. For example, California (WOEID 2347563)
 	 * is adjacent to Nevada (WOEID 2347587), Oregon (WOEID 2347596), Arizona
@@ -340,7 +350,7 @@ public class Place extends GeoPlanetResource {
 	}
 
 	/**
-	 * A comparator that orders places by population rank
+	 * A comparator that orders places by population rank (from low to high)
 	 */
 	public static Comparator<Place> POPULATION_ORDER = new Comparator<Place>() {
 		@Override
@@ -348,9 +358,9 @@ public class Place extends GeoPlanetResource {
 			return (a.getPopulationRank().compareTo(b.getPopulationRank()));
 		}
 	};
-	
+
 	/**
-	 * A comparator that orders places by area rank
+	 * A comparator that orders places by area rank (from low to high)
 	 */
 	public static Comparator<Place> AREA_ORDER = new Comparator<Place>() {
 		@Override
@@ -358,7 +368,7 @@ public class Place extends GeoPlanetResource {
 			return (a.getAreaRank().compareTo(b.getAreaRank()));
 		}
 	};
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

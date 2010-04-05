@@ -1,12 +1,14 @@
 package com.winterwell.jgeoplanet;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
 
 /**
  * Tests for Place and related functionality
- * 
+ *
  * @author Joe Halliwell <joe@winterwell.com>
  *
  */
@@ -30,14 +32,14 @@ public class PlaceTest extends GeoPlanetTest {
 		List<Place> zs = client.getPlaces("zzzzzzzzzzzzzzzzzzzzz").get();
 		assert zs.size() == 0;
 	}
-	
+
 	@Test(expected=PlaceNotFoundException.class)
 	public void testNoParent() throws GeoPlanetException {
 		Place earth = client.getPlace(1);
 		assert earth.getName().equals("Earth");
 		earth.getParent(); // This should throw a PlaceNotFoundException
 	}
-	
+
 	@Test
 	public void testEquality() throws GeoPlanetException {
 		GeoPlanet g = new GeoPlanet(appId);
@@ -63,7 +65,7 @@ public class PlaceTest extends GeoPlanetTest {
 		assert milano.getPlaceType().equals(milan.getPlaceType());
 		assert milano.getPlaceType().hashCode() == milan.getPlaceType().hashCode();
 	}
-	
+
 	@Test
 	public void testGetCountry() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh");
@@ -80,32 +82,38 @@ public class PlaceTest extends GeoPlanetTest {
 	public void testCommonAncestor() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh");
 		Place london = client.getPlace("London");
-		
+
 		Place ancestor = edinburgh.getCommonAncestor(london);
 		System.out.println(ancestor);
 	}
-	
+
 	@Test
 	public void testRankFields() throws GeoPlanetException {
 		Place bruntsfield = client.getPlace("Bruntsfield");
 		bruntsfield.getPopulationRank();
 		bruntsfield.getAreaRank();
 	}
-	
+
 	@Test
 	public void testAreaOrder() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh");
 		Place london = client.getPlace("London");
 		assert Place.AREA_ORDER.compare(edinburgh, london) < 0;
 		assert Place.AREA_ORDER.compare(london, edinburgh) > 0;
+		List<Place> places = Arrays.asList(london, edinburgh);
+		Collections.sort(places, Place.AREA_ORDER);
+		assert places.get(0) == edinburgh;
 	}
-	
+
 	@Test
 	public void testPopulationOrder() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Edinburgh");
 		Place london = client.getPlace("London");
 		assert Place.POPULATION_ORDER.compare(edinburgh, london) < 0;
 		assert Place.POPULATION_ORDER.compare(london, edinburgh) > 0;
+		List<Place> places = Arrays.asList(london, edinburgh);
+		Collections.sort(places, Place.POPULATION_ORDER);
+		assert places.get(0) == edinburgh;
 	}
-	
+
 }

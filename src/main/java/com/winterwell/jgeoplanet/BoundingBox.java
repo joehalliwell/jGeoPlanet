@@ -6,7 +6,9 @@ import org.json.JSONObject;
 /**
  * A region of the Earth's surface defined by four corners and some
  * great circles.
- * 
+ * <p>
+ * Regions that cover a pole are not supported.
+ * </p>
  * @author Joe Halliwell <joe@winterwell.com>
  */
 public class BoundingBox {

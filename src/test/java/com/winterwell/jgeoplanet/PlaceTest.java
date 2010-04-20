@@ -87,6 +87,17 @@ public class PlaceTest extends GeoPlanetTest {
 		System.out.println(ancestor);
 	}
 
+	/**
+	 * http://where.yahooapis.com/v1/place/2507854/common/2380824?appid=[yourappidhere]
+	 * @throws GeoPlanetException
+	 */
+	@Test
+	public void testCommonAncestorDocExample() throws GeoPlanetException {
+		Place a = client.getPlace(2507854);
+		Place b = client.getPlace(2380824);
+		Place c = a.getCommonAncestor(b);
+	}
+
 	@Test
 	public void testRankFields() throws GeoPlanetException {
 		Place bruntsfield = client.getPlace("Bruntsfield");

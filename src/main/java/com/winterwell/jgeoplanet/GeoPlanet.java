@@ -177,7 +177,7 @@ public class GeoPlanet {
 		}
 		return new PlaceCollection(this, query);
 	}
-	
+
 	/**
 	 * @return a Collection of all known PlaceTypes
 	 */
@@ -260,6 +260,9 @@ public class GeoPlanet {
 				throw new PlaceNotFoundException("WOEID");
 			default:
 				throw new GeoPlanetException("Unexpected response from GeoPlanet server: " + get.getStatusLine());
+			}
+			if (response.equals("null")) {
+				throw new GeoPlanetException("Server responded with \"null\" on " + uri);
 			}
 			return new JSONObject(response);
 		}

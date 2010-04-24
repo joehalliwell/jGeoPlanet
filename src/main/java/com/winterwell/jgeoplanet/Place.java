@@ -265,16 +265,26 @@ public class Place extends GeoPlanetResource {
 	}
 
 	/**
-	 * Return the smallest common ancestor of two places
-	 * @param the other child to consider
-	 * @return the smallest common ancestor
+	 * Return the smallest common ancestor of several places.
+	 * See <a href="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#common">GeoPlanet docs</a>
+	 * @param the other children to consider
+	 * @return their smallest common ancestor
 	 * @throws GeoPlanetException
+	 * @throws IllegalArgumentException if more than 10 other places are specified
 	 */
-	public Place getCommonAncestor(Place other) throws GeoPlanetException {
+	public Place getCommonAncestor(Place... others) throws GeoPlanetException {
+		if (others.length == 0) return this;
+		if (others.length > 10) {
+			throw new IllegalArgumentException("Cannot find the common ancestor of more than ten places");
+		}
+		
 		StringBuilder uri = new StringBuilder("/place/");
 		uri.append(woeId);
-		uri.append("/common/");
-		uri.append(other.woeId);
+		uri.append("/common");
+		for (int i = 0; i < others.length; i++) {
+			uri.append("/");
+			uri.append(others[i].woeId);			
+		}
 		JSONObject parent = getClient().doGet(uri.toString(), false);
 		try {
 			return new Place(getClient(), parent.getJSONObject("place"));

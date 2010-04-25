@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 /**
@@ -113,7 +115,7 @@ public class PlaceTest extends GeoPlanetTest {
 		assert Place.AREA_ORDER.compare(london, edinburgh) > 0;
 		List<Place> places = Arrays.asList(london, edinburgh);
 		Collections.sort(places, Place.AREA_ORDER);
-		assert places.get(0) == edinburgh;
+		Assert.assertEquals(edinburgh, places.get(0));
 	}
 
 	@Test
@@ -124,7 +126,47 @@ public class PlaceTest extends GeoPlanetTest {
 		assert Place.POPULATION_ORDER.compare(london, edinburgh) > 0;
 		List<Place> places = Arrays.asList(london, edinburgh);
 		Collections.sort(places, Place.POPULATION_ORDER);
-		assert places.get(0) == edinburgh;
+		Assert.assertEquals(edinburgh, places.get(0));
+	}
+	
+	@Test
+	public void testWildcard() throws GeoPlanetException {
+		Place london = client.getPlace("London, UK");
+		assert client.getPlaces("Lon*, UK").get().contains(london);
+	}
+	
+	@Test
+	public void testPlaceWithSpaceInName() throws GeoPlanetException {
+		Place mk = client.getPlace("Milton Keynes, UK");
+		Assert.assertEquals(29062, mk.getWoeId());
+		
+		mk = client.getPlace("Milton Keynes");
+		Assert.assertEquals(29062, mk.getWoeId());
+		
+		assert client.getPlaces("Milt*, UK").get().contains(mk);
+	}
+	
+	@Test
+	public void testWeirdPlaceNames() throws GeoPlanetException {
+		{
+			Place p = client.getPlace("Acock's Green");
+			Assert.assertEquals(2413668,  p.getWoeId());
+		}
+		{
+			Place p = client.getPlace("Goring-on-sea");
+			Assert.assertEquals(21382,  p.getWoeId());
+		}
+	}
+	
+	@Test
+	public void testBadQueries() throws GeoPlanetException {
+		Place mk = client.getPlace("Milton Keynes,");
+		Assert.assertEquals(29062, mk.getWoeId());
+		
+		mk = client.getPlace("      Milton Keynes");
+		Assert.assertEquals(29062, mk.getWoeId());
+		
+		assert client.getPlaces("Milton Keynes, UK").get().contains(mk);
 	}
 
 }

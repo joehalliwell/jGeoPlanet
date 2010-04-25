@@ -1,6 +1,8 @@
 package com.winterwell.jgeoplanet;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -160,22 +162,50 @@ public class GeoPlanet {
 		List<Place> places = getPlaces(query).get(0, 1);
 		if (places.size() == 0) throw new PlaceNotFoundException(query);
 		return places.get(0);
-	}
-
+	}	
+	
 	/**
 	 * Returns a {@link PlaceCollection} of places whose names match the query
 	 * to some extent.
-	 * The query may include an country code to adjust the ordering
+	 * Query may include an
+	 * The query may include an country code to adjust the ordering.
+	 * Widlcards are also permitted.
 	 * e.g. <code>getPlaces("Edinburgh, UK")</code> vs. <code>getPlaces("Edinburgh, USA")</code>
 	 * Only one comma is permitted.
+	 * For a "startswith" filter, specify the place as a string followed by an asterisk (*),
+	 * encoded as %2A. Towns are returned in probability order. A maximum of 200 places
+	 * can be returned per request. 
 	 * TODO: Commas can (it seems) appear in place names.
 	 * @return a {@link PlaceCollection} of places matching the query
 	 */
 	public PlaceCollection getPlaces(String query) throws GeoPlanetException {
-		if (query.indexOf(",") != query.lastIndexOf(",")) {
-			throw new GeoPlanetException("Place queries can only indicate one focus");
+		int lastComma = query.lastIndexOf(",");
+		StringBuilder q = new StringBuilder();
+		if (lastComma != -1) {
+			q.append(prepQueryTerm(query.substring(0, lastComma)));
+			if (lastComma < query.length()) {
+				q.append(",");
+				q.append(prepQueryTerm(query.substring(lastComma + 1)));
+			}
 		}
-		return new PlaceCollection(this, query);
+		else {
+			q.append(prepQueryTerm(query));
+		}
+		return new PlaceCollection(this, q.toString());
+	}
+	
+	private String prepQueryTerm(final String input) {
+		String output;
+		output = input.trim();
+		try {
+			output = URLEncoder.encode(output, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("Can't happen");
+		}
+		output = output.replace("*", "%2A");
+		output = output.replace(",", "%2E");
+		if (output.length() == 0) throw new IllegalArgumentException("Empty query string");
+		return "'" + output + "'";
 	}
 
 	/**

@@ -142,8 +142,7 @@ public class PlaceTest extends GeoPlanetTest {
 		
 		mk = client.getPlace("Milton Keynes");
 		Assert.assertEquals(29062, mk.getWoeId());
-		
-		assert client.getPlaces("Milt*, UK").get().contains(mk);
+		assert client.getPlaces("Milto*, UK").get().contains(mk);
 	}
 	
 	@Test
@@ -165,8 +164,6 @@ public class PlaceTest extends GeoPlanetTest {
 		
 		mk = client.getPlace("      Milton Keynes");
 		Assert.assertEquals(29062, mk.getWoeId());
-		
-		assert client.getPlaces("Milton Keynes, UK").get().contains(mk);
 	}
 
 }

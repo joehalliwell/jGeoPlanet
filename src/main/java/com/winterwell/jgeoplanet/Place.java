@@ -57,10 +57,10 @@ public class Place extends GeoPlanetResource {
 			placeTypeNameVariant = place.getString("placeTypeName");
 			int placeTypeCode = place.getJSONObject("placeTypeName attrs").getInt("code");
 			this.placeType = client.getPlaceType(placeTypeCode);
-			if (false && !placeTypeNameVariant.equals(placeType.getName())) {
-				System.out.println("Warning! '" + name + "' " +
-					"has type name '" + placeTypeNameVariant +"' " +
-					"but type code '" + placeType.getName() + "'");
+			if (!placeTypeNameVariant.equals(placeType.getName())) {
+				client.log.warn(
+					this + " has type name " + placeTypeNameVariant +
+					" but type code " + placeType.getName());
 			}
 
 			// Long fields

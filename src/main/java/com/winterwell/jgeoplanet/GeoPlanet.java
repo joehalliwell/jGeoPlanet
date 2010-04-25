@@ -12,6 +12,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,13 +52,16 @@ import org.json.JSONObject;
  *
  */
 public class GeoPlanet {
-
+	
 	public static String appIdUrl = "http://developer.yahoo.com/wsregapp/";
 	private final String appId;
 	private final String language;
 	private final String serviceUri;
 	private Map<String, PlaceType> placeTypeNameCache;
 	private Map<Integer, PlaceType> placeTypeCodeCache;
+	// Using apache.utils.logging which ships with httpclient
+	protected Log log = LogFactory.getLog(GeoPlanet.class);
+	
 	/**
 	 * Default serviceURI (the Yahoo! implementation) for convenience constructors.
 	 */
@@ -167,15 +172,17 @@ public class GeoPlanet {
 	/**
 	 * Returns a {@link PlaceCollection} of places whose names match the query
 	 * to some extent.
-	 * Query may include an
-	 * The query may include an country code to adjust the ordering.
-	 * Widlcards are also permitted.
+	 * <p>
+	 * Query may include a comma-separated "focus" used to adjust the ordering
+	 * of results. 
 	 * e.g. <code>getPlaces("Edinburgh, UK")</code> vs. <code>getPlaces("Edinburgh, USA")</code>
-	 * Only one comma is permitted.
+     * Additional commas are interpreted as part of the place name.
+     * <p>
+     * <p>
 	 * For a "startswith" filter, specify the place as a string followed by an asterisk (*),
-	 * encoded as %2A. Towns are returned in probability order. A maximum of 200 places
-	 * can be returned per request. 
-	 * TODO: Commas can (it seems) appear in place names.
+	 * Towns are returned in probability order. A maximum of 200 places
+	 * can be returned per request.
+	 * <p>
 	 * @return a {@link PlaceCollection} of places matching the query
 	 */
 	public PlaceCollection getPlaces(String query) throws GeoPlanetException {
@@ -271,15 +278,21 @@ public class GeoPlanet {
 		StringBuilder uri = new StringBuilder(serviceUri);
 		uri.append(path);
 		uri.append("?");
-		uri.append("appid="); uri.append(appId);
-		uri.append("&format=json");
+		uri.append("format=json");
 		uri.append("&select="); uri.append(shortForm?"short":"long");
 		uri.append("&lang="); uri.append(language);
+		log.trace("Fetching: " + uri + "&appId=REDACTED");
+		// Don't log appId
+		uri.append("&appid="); uri.append(appId);
 		try {
 			GetMethod get = new GetMethod(URIUtil.encodePathQuery(uri.toString()));
 			HttpClient httpClient = new HttpClient();
 			httpClient.executeMethod(get);
 			String response = get.getResponseBodyAsString();
+			int responseCode = get.getStatusCode();
+			if (responseCode != 200) {
+				log.trace(responseCode + " response code from server");
+			}
 			switch (get.getStatusCode()) {
 			case 200:
 				break;
@@ -294,12 +307,15 @@ public class GeoPlanet {
 			if (response.equals("null")) {
 				throw new GeoPlanetException("Server responded with \"null\" on " + uri);
 			}
-			return new JSONObject(response);
+			try {
+				return new JSONObject(response);
+			}
+			catch (JSONException e) {
+				log.error("Non-JSON response from server: [" + response + "]");
+				throw new GeoPlanetException(e);
+			}
 		}
 		catch (HttpException e) {
-			throw new GeoPlanetException(e);
-		}
-		catch (JSONException e) {
 			throw new GeoPlanetException(e);
 		}
 		catch (IOException e) {

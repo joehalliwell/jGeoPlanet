@@ -2,6 +2,8 @@ package com.winterwell.jgeoplanet;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 /**
@@ -52,9 +54,9 @@ public class MiscTest extends GeoPlanetTest {
 	@Test
 	public void testFocusWeirdness() throws GeoPlanetException {
 		int kents = client.getPlaces("Kent, UK").get().size();
-		int kents2 = client.getPlaces("Kent%2C+UK").get().size();
-		assert kents2 == 1;
-		assert kents2 <= kents;
+		int kents2 = client.getPlaces("Kent%2CUK").get().size();
+		Assert.assertEquals(37, kents);
+		Assert.assertEquals(1, kents2);
 	}
 
 	@Test

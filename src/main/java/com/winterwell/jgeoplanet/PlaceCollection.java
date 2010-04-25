@@ -29,6 +29,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	PlaceType[] types;
 	boolean useShortForm = false;
 	int total = -1;
+	Integer degree = null;
 
 	PlaceCollection(GeoPlanet client, String query) {
 		super(client);
@@ -48,6 +49,7 @@ public class PlaceCollection extends GeoPlanetResource {
 		this.useShortForm = other.useShortForm;
 		this.total = other.total;
 		this.types = other.types;
+		this.degree = other.degree;
 	}
 
 	/**
@@ -68,6 +70,7 @@ public class PlaceCollection extends GeoPlanetResource {
 	 */
 	public PlaceCollection type(PlaceType... types) throws GeoPlanetException {
 		assert types != null;
+		if (degree != null) throw new UnsupportedOperationException("Cannot specify both type and degree");		// TODO: if types > 1 check we're looking at a places collection
 		if (types.length > 7) {
 			throw new GeoPlanetException("Cannot specify more than 7 types");
 		}
@@ -95,9 +98,6 @@ public class PlaceCollection extends GeoPlanetResource {
 	 */
 	public PlaceCollection typename(String... placeTypeNames) throws GeoPlanetException {
 		assert placeTypeNames != null;
-		if (placeTypeNames.length > 7) {
-			throw new GeoPlanetException("Cannot specify more than 7 types");
-		}
 		PlaceType[] placeTypes = new PlaceType[placeTypeNames.length];
 		for (int i = 0; i < placeTypeNames.length; i++) {
 			placeTypes[i] = getClient().getPlaceType(placeTypeNames[i].trim());
@@ -105,6 +105,21 @@ public class PlaceCollection extends GeoPlanetResource {
 		return type(placeTypes);
 	}
 
+	/**
+	 * Returns places that have more distant relationships (that is, neighbors of neighbors).
+	 * @param degree
+	 */
+	public PlaceCollection degree(Integer degree) {
+		if (types != null) throw new UnsupportedOperationException("Cannot specify both type and degree");
+		if (query.equals("children") || query.equals("neighbours")) {
+			PlaceCollection result = new PlaceCollection(this);
+			result.degree = degree;
+			return result;
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	
 	/**
 	 * If this collection is filtered by a single place type, return that type
 	 * If it is unfiltered, return null.
@@ -147,6 +162,22 @@ public class PlaceCollection extends GeoPlanetResource {
 	public boolean isShortForm() {
 		return useShortForm;
 	}
+	
+	/**
+	 * Return the relationship represented by this collection, or null
+	 * if it is a places query. 
+	 */
+	public String getRelation() {
+		if (base == null) return null;
+		return query;
+	}
+	
+	/**
+	 * Return the base of this collection, or null if it is a places query.
+	 */
+	public Place getBase() {
+		return base;
+	}
 
 	private void appendTypes(StringBuilder sb) {
 		assert types != null;
@@ -167,6 +198,13 @@ public class PlaceCollection extends GeoPlanetResource {
 		sb.append(")");
 	}
 
+	private void appendDegree(StringBuilder sb) {
+		if (degree == null) return;
+		sb.append(".degree(");
+		sb.append(degree);
+		sb.append(")");
+	}
+	
 	/**
 	 * Returns the total number of places in this collection if a get() has occurred, or -1
 	 * to indicate that no get has occurred.
@@ -209,6 +247,7 @@ public class PlaceCollection extends GeoPlanetResource {
 			uri.append(base.getWoeId());
 			uri.append("/");
 			uri.append(query); // A relation in this case...
+			appendDegree(uri);
 			if (types != null) {
 				appendTypes(uri);
 			}
@@ -247,7 +286,9 @@ public class PlaceCollection extends GeoPlanetResource {
 		try {
 			tmp = tmp.getJSONObject("places");
 			total = tmp.getInt("total");
-			if (total == 0) return new ArrayList<Place>(0);
+			if (total == 0) {
+				return new ArrayList<Place>(0);
+			}
 
 			int start = tmp.getInt("start");
 			int count = tmp.getInt("count");

@@ -38,8 +38,8 @@ public class Place extends GeoPlanetResource {
 	private AdminRegion admin3;
 	private Location centroid;
 	private BoundingBox bbox;
-	private long popRank;
-	private long areaRank;
+	private int popRank = -1;
+	private int areaRank = -1;
 
 	/**
 	 * Construct a place from a JSON representation
@@ -78,8 +78,8 @@ public class Place extends GeoPlanetResource {
 			this.admin2 = getAdminRegion(place, "admin2");
 			this.admin3 = getAdminRegion(place, "admin3");
 
-			this.popRank = place.getLong("popRank");
-			this.areaRank = place.getLong("areaRank");
+			this.popRank = place.getInt("popRank");
+			this.areaRank = place.getInt("areaRank");
 
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
@@ -228,18 +228,20 @@ public class Place extends GeoPlanetResource {
 	}
 
 	/**
-	 * TODO: Link to explanation of codes
+	 * Return a measure of the size of the population of this place.
+	 * http://developer.yahoo.com/geo/geoplanet/guide/api_docs.html#response-data
 	 * @return the population rank
 	 */
-	public Long getPopulationRank() {
+	public int getPopulationRank() {
 		return popRank;
 	}
 
 	/**
-	 * TODO: Link to explanation of codes
+	 * Return a measure of the size of this place.
+	 * http://developer.yahoo.com/geo/geoplanet/guide/api_docs.html#response-data
 	 * @return the area rank
 	 */
-	public Long getAreaRank() {
+	public int getAreaRank() {
 		return areaRank;
 	}
 
@@ -365,7 +367,7 @@ public class Place extends GeoPlanetResource {
 	public static Comparator<Place> POPULATION_ORDER = new Comparator<Place>() {
 		@Override
 		public int compare(Place a, Place b) {
-			return (a.getPopulationRank().compareTo(b.getPopulationRank()));
+			return new Integer(a.areaRank).compareTo(b.areaRank);
 		}
 	};
 
@@ -375,7 +377,7 @@ public class Place extends GeoPlanetResource {
 	public static Comparator<Place> AREA_ORDER = new Comparator<Place>() {
 		@Override
 		public int compare(Place a, Place b) {
-			return (a.getAreaRank().compareTo(b.getAreaRank()));
+			return new Integer(a.areaRank).compareTo(b.areaRank);
 		}
 	};
 
@@ -408,6 +410,4 @@ public class Place extends GeoPlanetResource {
 					  //"placeType=" + placeType + ", " +
 					  "woeId=" + woeId + "]";
 	}
-
-
 }

@@ -20,6 +20,14 @@ public class PlaceCollectionTest extends GeoPlanetTest {
 		Place marchmont = client.getPlace("Marchmont, Edinburgh");
 		assert children.contains(marchmont);
 	}
+	
+	@Test
+	public void testChildrenDegree() throws GeoPlanetException {
+		Place edinburgh = client.getPlace("Scotland");
+		List<Place> children = edinburgh.getChildren().degree(2).get();
+		Place marchmont = client.getPlace("Marchmont, Edinburgh");
+		assert children.contains(marchmont);
+	}
 
 	@Test
 	public void testSiblings() throws GeoPlanetException {
@@ -41,7 +49,8 @@ public class PlaceCollectionTest extends GeoPlanetTest {
 	
 	@Test
 	public void testDescendents() throws GeoPlanetException {
-		List<Place> desc = client.getPlace("UK").getDescendents().get();
+		Place uk = client.getPlace("Edinburgh");
+		List<Place> desc = uk.getDescendents().get();
 	}
 
 	@Test

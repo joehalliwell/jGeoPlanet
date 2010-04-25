@@ -311,7 +311,7 @@ public class GeoPlanet {
 				return new JSONObject(response);
 			}
 			catch (JSONException e) {
-				log.error("Non-JSON response from server: [" + response + "]");
+				log.info("Non-JSON response from server: [" + response + "]");
 				throw new GeoPlanetException(e);
 			}
 		}

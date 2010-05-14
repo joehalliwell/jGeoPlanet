@@ -1,8 +1,9 @@
 package com.winterwell.jgeoplanet;
 
 /**
- * A GeoPlanetResource is a resource bound to a particular GeoPlanet
- * instance. As such it has an associated language and application ID.
+ * Base class for GeoPlanet objects. A GeoPlanetResource is a resource 
+ * bound to a particular GeoPlanet instance. As such it has an associated
+ * language and application ID.
  *
  * @author Joe Halliwell <joe@winterwell.com>
  */

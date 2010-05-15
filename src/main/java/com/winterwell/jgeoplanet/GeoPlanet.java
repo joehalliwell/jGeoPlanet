@@ -53,7 +53,8 @@ import org.json.JSONObject;
  */
 public class GeoPlanet {
 	
-	//public static String appIdUrl = "http://developer.yahoo.com/wsregapp/";
+	// URL for application IDs
+	public static String appIdUrl = "http://developer.yahoo.com/wsregapp/";
 	private final String appId;
 	private final String language;
 	private final String serviceUri;

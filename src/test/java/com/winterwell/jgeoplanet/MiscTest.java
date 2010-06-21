@@ -55,7 +55,7 @@ public class MiscTest extends GeoPlanetTest {
 	public void testFocusWeirdness() throws GeoPlanetException {
 		int kents = client.getPlaces("Kent, UK").get().size();
 		int kents2 = client.getPlaces("Kent%2CUK").get().size();
-		Assert.assertEquals(37, kents);
+		Assert.assertEquals(38, kents);
 		Assert.assertEquals(1, kents2);
 	}
 

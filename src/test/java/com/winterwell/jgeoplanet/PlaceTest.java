@@ -132,7 +132,8 @@ public class PlaceTest extends GeoPlanetTest {
 	@Test
 	public void testWildcard() throws GeoPlanetException {
 		Place london = client.getPlace("London, UK");
-		assert client.getPlaces("Lon*, UK").get().contains(london);
+		List<Place> londons = client.getPlaces("Lond*").get();
+		assert londons.contains(london) : londons;
 	}
 	
 	@Test

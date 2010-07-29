@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.winterwell.jgeoplanet.GeoPlanet;
 import com.winterwell.jgeoplanet.GeoPlanetException;
 import com.winterwell.jgeoplanet.InvalidAppIdException;
-import com.winterwell.jgeoplanet.InvalidPlaceType;
+import com.winterwell.jgeoplanet.InvalidPlaceTypeException;
 import com.winterwell.jgeoplanet.Place;
 import com.winterwell.jgeoplanet.PlaceCollection;
 import com.winterwell.jgeoplanet.PlaceNotFoundException;

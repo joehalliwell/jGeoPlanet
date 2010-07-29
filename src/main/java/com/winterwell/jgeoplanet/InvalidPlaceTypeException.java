@@ -5,12 +5,12 @@ package com.winterwell.jgeoplanet;
  * 
  * @author Joe Halliwell <joe@winterwell.com>
  */
-public class InvalidPlaceType extends GeoPlanetException {
+public class InvalidPlaceTypeException extends GeoPlanetException {
 
 	private static final long serialVersionUID = -4976221039931412361L;
 	private String placeTypeName;
 	
-	public InvalidPlaceType(String placeTypeName) {
+	public InvalidPlaceTypeException(String placeTypeName) {
 		super("Invalid place type: " + placeTypeName);
 		this.placeTypeName = placeTypeName;
 	}

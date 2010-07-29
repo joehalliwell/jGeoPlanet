@@ -25,7 +25,7 @@ public class PlaceTypeTest extends GeoPlanetTest {
 		assert aland.getPlaceTypeNameVariant().equals("Province");
 	}
 
-	@Test(expected=InvalidPlaceType.class)
+	@Test(expected=InvalidPlaceTypeException.class)
 	public void testInvalidPlaceType() throws GeoPlanetException {
 		client.getPlaceType("Province");
 	}

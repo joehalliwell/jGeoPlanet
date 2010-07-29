@@ -226,11 +226,11 @@ public class GeoPlanet {
 	/**
      * Look up a PlaceType by name.
      * @return the PlaceType corresponding to the provided name.
-	 * @throws InvalidPlaceType if the name is invalid
+	 * @throws InvalidPlaceTypeException if the name is invalid
 	 */
-	public PlaceType getPlaceType(String placeTypeName) throws InvalidPlaceType {
+	public PlaceType getPlaceType(String placeTypeName) throws InvalidPlaceTypeException {
 		PlaceType type = placeTypeNameCache.get(placeTypeName);
-		if (type == null) throw new InvalidPlaceType(placeTypeName);
+		if (type == null) throw new InvalidPlaceTypeException(placeTypeName);
 		return type;
 	}
 
@@ -238,11 +238,11 @@ public class GeoPlanet {
 	 * Look up a PlaceType by code.
 	 * @param placeTypeCode a valid place type code
 	 * @return the PlaceType corresponding to the provided code.
-	 * @throws InvalidPlaceType if the code is invalid
+	 * @throws InvalidPlaceTypeException if the code is invalid
 	 */
-	public PlaceType getPlaceType(int placeTypeCode) throws InvalidPlaceType {
+	public PlaceType getPlaceType(int placeTypeCode) throws InvalidPlaceTypeException {
 		PlaceType type = placeTypeCodeCache.get(placeTypeCode);
-		if (type == null) throw new InvalidPlaceType(placeTypeCode + " (code)");
+		if (type == null) throw new InvalidPlaceTypeException(placeTypeCode + " (code)");
 		return type;
 	}
 
@@ -300,12 +300,13 @@ public class GeoPlanet {
 			case 400:
 				throw new InvalidAppIdException(appId);
 			case 404:
-				// TODO: Collections seem to throw this sometimes
+				// TODO: Collections throw this sometimes -- missing data?
 				throw new PlaceNotFoundException("WOEID");
 			default:
 				throw new GeoPlanetException("Unexpected response from GeoPlanet server: " + get.getStatusLine());
 			}
 			if (response.equals("null")) {
+				// TODO: Never a legitimate response?
 				throw new GeoPlanetException("Server responded with \"null\" on " + uri);
 			}
 			try {

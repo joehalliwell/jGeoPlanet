@@ -1,7 +1,11 @@
 package com.winterwell.jgeoplanet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
@@ -169,7 +173,32 @@ public class GeoPlanet {
 		if (places.size() == 0) throw new PlaceNotFoundException(query);
 		return places.get(0);
 	}	
-	
+
+	/**
+	 * Given a location (latitude and longitude), return a place at that location
+	 * using the Yahoo Geocode service.
+	 * http://developer.yahoo.com/geo/placefinder/guide/requests.html#latitude-longitude
+	 * @param location the location to search for
+	 * @return a place at the specified location
+	 * @throws GeoPlanetException
+	 */
+	public Place getPlace(Location location) throws GeoPlanetException {
+		try {
+			StringBuilder sb = new StringBuilder("http://where.yahooapis.com/geocode?");
+			sb.append("q="); sb.append(location.getLatitude());
+			sb.append(", "); sb.append(location.getLongitude());
+			sb.append("&flags=QJ");
+			sb.append("&gflags=R");
+			sb.append("&appid="); sb.append(appId);
+			JSONObject resp = doHttpGet(sb.toString());
+			Long woeId = resp.getJSONObject("ResultSet").getJSONArray("Results").getJSONObject(0).getLong("woeid");
+			Place p = getPlace(woeId);
+			return p;
+		} catch (Exception e) {
+			throw new GeoPlanetException(e);
+		}
+	}
+
 	/**
 	 * Returns a {@link PlaceCollection} of places whose names match the query
 	 * to some extent.
@@ -285,6 +314,10 @@ public class GeoPlanet {
 		log.trace("Fetching: " + uri + "&appId=REDACTED");
 		// Don't log appId
 		uri.append("&appid="); uri.append(appId);
+		return doHttpGet(uri.toString());
+	}
+
+	private JSONObject doHttpGet(String uri) throws GeoPlanetException, PlaceNotFoundException {
 		try {
 			GetMethod get = new GetMethod(URIUtil.encodePathQuery(uri.toString()));
 			HttpClient httpClient = new HttpClient();
@@ -324,7 +357,7 @@ public class GeoPlanet {
 			throw new GeoPlanetException(e);
 		}
 	}
-
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */

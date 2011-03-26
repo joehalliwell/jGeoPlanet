@@ -85,4 +85,13 @@ public class MiscTest extends GeoPlanetTest {
 		assert towns.contains(suva);
 		assert fiji.contains(suva);
 	}
+	
+	@Test
+	public void testGeocode() throws GeoPlanetException {
+		Place edinburgh = client.getPlace("Edinburgh, UK");
+		Place other = client.getPlace(edinburgh.getCentroid());
+		
+		System.out.println(other);
+		assert edinburgh.contains(other);
+	}
 }

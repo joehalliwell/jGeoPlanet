@@ -257,7 +257,12 @@ public class PlaceCollection extends GeoPlanetResource {
 		uri.append(";count="); uri.append(count);
 		// Results
 		JSONObject tmp;
-		tmp = getClient().doGet(uri.toString(), useShortForm);
+		try {
+			tmp = getClient().doGet(uri.toString(), useShortForm);
+		}
+		catch (PlaceNotFoundException e) {
+			return new ArrayList<Place>();
+		}
 		return processResults(tmp);
 	}
 

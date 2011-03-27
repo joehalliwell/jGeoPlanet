@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -64,7 +65,7 @@ public class GeoPlanet {
 	private final String serviceUri;
 	private Map<String, PlaceType> placeTypeNameCache;
 	private Map<Integer, PlaceType> placeTypeCodeCache;
-	// Using apache.utils.logging which ships with httpclient
+	// Using apache.commons.logging which ships with httpclient
 	protected Log log = LogFactory.getLog(GeoPlanet.class);
 	
 	/**
@@ -239,7 +240,7 @@ public class GeoPlanet {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Can't happen");
 		}
-		output = output.replace("*", "%2A");
+		//output = output.replace("*", "%2A");
 		output = output.replace(",", "%2E");
 		if (output.length() == 0) throw new IllegalArgumentException("Empty query string");
 		return "'" + output + "'";

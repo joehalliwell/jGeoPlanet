@@ -1,9 +1,12 @@
 package com.winterwell.jgeoplanet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.junit.Test;
 
 /**
@@ -55,7 +58,7 @@ public class MiscTest extends GeoPlanetTest {
 	public void testFocusWeirdness() throws GeoPlanetException {
 		int kents = client.getPlaces("Kent, UK").get().size();
 		int kents2 = client.getPlaces("Kent%2CUK").get().size();
-		Assert.assertEquals(38, kents);
+		Assert.assertEquals(40, kents);
 		Assert.assertEquals(1, kents2);
 	}
 
@@ -70,7 +73,7 @@ public class MiscTest extends GeoPlanetTest {
 	@Test
 	public void testFijiAncestors() throws GeoPlanetException {
 		Place fiji = client.getPlace("Fiji");
-		List<Place> towns = fiji.getAncestors().get();
+		List<Place> towns = fiji.getAncestors().get(); // This 404s...
 	}
 	
 	@Test
@@ -84,6 +87,18 @@ public class MiscTest extends GeoPlanetTest {
 		
 		assert towns.contains(suva);
 		assert fiji.contains(suva);
+	}
+
+	@Test
+	public void testFiltering() throws GeoPlanetException, URIException {
+		Place uk = client.getPlace("UK");
+		List<Place> filtered = new ArrayList<Place>();
+		List<Place> leeds = client.getPlaces("Leeds").get();
+		for (Place p : leeds) {
+		    if (uk.contains(p)) filtered.add(p);
+		}
+		System.out.println("Leeds in UK: " + filtered.size());
+		System.out.println("Outside the UK: " + (leeds.size() - filtered.size()));
 	}
 	
 	@Test

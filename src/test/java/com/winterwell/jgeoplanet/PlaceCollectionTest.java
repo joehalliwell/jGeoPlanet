@@ -24,7 +24,7 @@ public class PlaceCollectionTest extends GeoPlanetTest {
 	@Test
 	public void testChildrenDegree() throws GeoPlanetException {
 		Place edinburgh = client.getPlace("Scotland");
-		List<Place> children = edinburgh.getChildren().degree(2).get();
+		List<Place> children = edinburgh.getChildren().degree(3).get();
 		Place marchmont = client.getPlace("Marchmont, Edinburgh");
 		assert children.contains(marchmont);
 	}

@@ -1,20 +1,15 @@
 package com.winterwell.jgeoplanet;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.commons.logging.impl.SimpleLog;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.winterwell.jgeoplanet.GeoPlanet;
-import com.winterwell.jgeoplanet.GeoPlanetException;
-import com.winterwell.jgeoplanet.InvalidAppIdException;
-import com.winterwell.jgeoplanet.InvalidPlaceTypeException;
-import com.winterwell.jgeoplanet.Place;
-import com.winterwell.jgeoplanet.PlaceCollection;
-import com.winterwell.jgeoplanet.PlaceNotFoundException;
-import com.winterwell.jgeoplanet.PlaceType;
 
 /**
  * Base class for jGeoPlanet tests

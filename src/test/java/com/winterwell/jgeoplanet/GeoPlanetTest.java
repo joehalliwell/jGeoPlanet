@@ -40,12 +40,12 @@ public class GeoPlanetTest {
 
 	static void printTestSetupHelp() {
 		String m = "" +
-				"***********************************************************************" +
-				"ERROR! Could not locate application ID.\n" +
-				"Please ensure that you have a properties file called '%1$s' on " +
-				"your classpath and that it defines the '%2$s' property correctly. " +
-				"Application IDs are available from %3$s" +
-				"***********************************************************************";
+				"\n***********************************************************************" +
+				"\nFATAL! Could not locate application ID.\n" +
+				"\nPlease ensure that you have a properties file called '%1$s' on " +
+				"\nyour classpath and that it defines the '%2$s' property correctly. " +
+				"\nApplication IDs are available from %3$s" +
+				"\n***********************************************************************";
 		System.out.println(String.format(m, propertyFile, property, GeoPlanet.appIdUrl));
 	}
 

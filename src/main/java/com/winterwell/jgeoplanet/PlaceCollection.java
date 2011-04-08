@@ -206,11 +206,13 @@ public class PlaceCollection extends GeoPlanetResource {
 	}
 	
 	/**
-	 * Returns the total number of places in this collection if a get() has occurred, or -1
-	 * to indicate that no get has occurred.
+	 * Returns the <em>total</em> number of places in this collection.
+	 * Requires network access.
 	 * @return the total number of place in this collection if known, or -1
+	 * @throws GeoPlanetException 
 	 */
-	public int size() {
+	public int size() throws GeoPlanetException {
+		if (total == -1) get(0, 1);
 		return total;
 	}
 
@@ -291,6 +293,7 @@ public class PlaceCollection extends GeoPlanetResource {
 		try {
 			tmp = tmp.getJSONObject("places");
 			total = tmp.getInt("total");
+			assert total > 0;
 			if (total == 0) {
 				return new ArrayList<Place>(0);
 			}

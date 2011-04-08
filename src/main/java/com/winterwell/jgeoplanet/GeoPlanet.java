@@ -318,6 +318,14 @@ public class GeoPlanet {
 		return doHttpGet(uri.toString());
 	}
 
+	/**
+	 * Get a JSON object from the specified URI.
+	 * Factored out of {@link #doGet(String, boolean)} for use with the geocode service.
+	 * @param uri
+	 * @return
+	 * @throws GeoPlanetException
+	 * @throws PlaceNotFoundException
+	 */
 	private JSONObject doHttpGet(String uri) throws GeoPlanetException, PlaceNotFoundException {
 		try {
 			GetMethod get = new GetMethod(URIUtil.encodePathQuery(uri.toString()));

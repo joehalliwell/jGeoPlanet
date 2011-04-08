@@ -28,8 +28,9 @@ to this page, e.g. built using jGeoPlanet, is the recommended way to do this.
 Your own code can be licensed commercially and you do not have to release the
 source code.
 
-## Verions
+## Versions
 
+0.1.3 Support Yahoo Geocode; various bugfixes. This release breaks the API.
 0.1.2 Support multiple place types; add bounding box. This release breaks API.
 0.1.1 Added Place.getCountry()
 0.1.0 Inital release

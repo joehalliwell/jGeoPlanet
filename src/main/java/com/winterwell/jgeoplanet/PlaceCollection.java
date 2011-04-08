@@ -1,7 +1,10 @@
 package com.winterwell.jgeoplanet;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.management.RuntimeErrorException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +25,7 @@ import org.json.JSONObject;
  * </p>
  * @author Joe Halliwell <joe@winterwell.com>
  */
-public class PlaceCollection extends GeoPlanetResource {
+public class PlaceCollection extends GeoPlanetResource implements Iterable<Place> {
 	Place base;
 	/** Can be a test string to search for, or a relation e.g. children, belongtos **/
 	String query;
@@ -311,6 +314,15 @@ public class PlaceCollection extends GeoPlanetResource {
 			return results;
 		} catch (JSONException e) {
 			throw new GeoPlanetException(e);
+		}
+	}
+
+	@Override
+	public Iterator<Place> iterator() {
+		try {
+			return get().iterator();
+		} catch (GeoPlanetException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

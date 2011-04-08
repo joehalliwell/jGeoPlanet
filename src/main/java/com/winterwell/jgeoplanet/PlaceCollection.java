@@ -316,7 +316,11 @@ public class PlaceCollection extends GeoPlanetResource implements Iterable<Place
 			throw new GeoPlanetException(e);
 		}
 	}
-
+	
+	/**
+	 * Get an iterator over this collection.
+	 * @throws RuntimeException wrapping a {@link GeoPlanetException} in case of error
+	 */
 	@Override
 	public Iterator<Place> iterator() {
 		try {

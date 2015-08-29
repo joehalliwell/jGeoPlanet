@@ -1,7 +1,7 @@
 package com.winterwell.jgeoplanet;
 
 /**
- * Base class for GeoPlanet objects. A GeoPlanetResource is a resource 
+ * Base class for GeoPlanet objects. A GeoPlanetResource is a resource
  * bound to a particular GeoPlanet instance. As such it has an associated
  * language and application ID.
  *
@@ -9,19 +9,20 @@ package com.winterwell.jgeoplanet;
  */
 public abstract class GeoPlanetResource {
 
-	private final GeoPlanet client;
+    private final GeoPlanet client;
 
-	GeoPlanetResource(GeoPlanet client) {
-		this.client = client;
-	}
+    GeoPlanetResource(GeoPlanet client) {
+        this.client = client;
+    }
 
-	/**
-	 * Returns the client that was used to retrieve this place.
-	 * Handy for checking the language, application ID etc.
-	 * @return the client associated with this place
-	 */
-	public GeoPlanet getClient() {
-		return this.client;
-	}
+    /**
+     * Returns the client that was used to retrieve this place.
+     * Handy for checking the language, application ID etc.
+     *
+     * @return the client associated with this place
+     */
+    public GeoPlanet getClient() {
+        return this.client;
+    }
 
 }

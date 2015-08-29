@@ -100,7 +100,7 @@ public class PlaceCollection extends GeoPlanetResource implements Iterable<Place
      * @param placeTypeNames the place type name or names. These must be valid.
      * @return a version of this collection filtered by the specified type.
      * @throws GeoPlanetException
-     * @see #type(PlaceType)
+     * @see PlaceCollection#type(PlaceType...)
      */
     public PlaceCollection typename(String... placeTypeNames) throws GeoPlanetException {
         assert placeTypeNames != null;
@@ -235,6 +235,7 @@ public class PlaceCollection extends GeoPlanetResource implements Iterable<Place
      *
      * @param start The first result to get indexed from 0
      * @param count The maximum number of results to return. Zero (0) returns all results.
+     * @return a list of (some of) the places contained in this collection
      * @throws GeoPlanetException for general errors
      */
     public List<Place> get(int start, int count) throws GeoPlanetException {

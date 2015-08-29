@@ -60,11 +60,10 @@ public class Location {
     /**
      * Rough and ready distance in kilometres between this location
      * and the specified other.
-     * Uses the Haversine formula.
+     * Uses the <a href="http://en.wikipedia.org/wiki/Great-circle_distance">Haversine formula</a>.
      *
      * @param other
      * @return distance in kilometres
-     * @see http://en.wikipedia.org/wiki/Great-circle_distance
      */
     public double distance(Location other) {
         final double lat = latitude * Math.PI / 180;

@@ -45,7 +45,7 @@ public class AdminRegion extends GeoPlanetResource {
 
     /**
      * Returns a short code for the region e.g. "IT" for Italy. This
-     * is <em>not</em the same as the (numeric) codes retrieved by {@link PlaceType#getCode()}.
+     * is <em>not</em> the same as the (numeric) codes retrieved by {@link PlaceType#getCode()}.
      * May be null if there is no known short code.
      *
      * @return A short code for the region. May be null.

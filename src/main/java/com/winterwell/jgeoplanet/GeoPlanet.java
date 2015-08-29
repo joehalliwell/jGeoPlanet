@@ -145,6 +145,7 @@ public class GeoPlanet {
     }
 
     /**
+     * @param woeId the WOE ID to look up
      * @return the place corresponding to the specified WOE ID
      * @throws PlaceNotFoundException if the ID is invalid
      * @throws GeoPlanetException     for general errors
@@ -169,6 +170,8 @@ public class GeoPlanet {
      * except that it throws a <code>PlaceNotFoundException</code> if
      * there were no matching places.
      *
+     * @param query the name of the place to locate
+     * @return the place, if found
      * @throws PlaceNotFoundException if there are no matches for the query
      * @throws GeoPlanetException     on general errors
      */
@@ -185,7 +188,7 @@ public class GeoPlanet {
      *
      * @param location the location to search for
      * @return a place at the specified location
-     * @throws GeoPlanetException
+     * @throws GeoPlanetException on error
      */
     public Place getPlace(Location location) throws GeoPlanetException {
         try {
@@ -208,19 +211,21 @@ public class GeoPlanet {
     }
 
     /**
+     * <p>
      * Returns a {@link PlaceCollection} of places whose names match the query
      * to some extent.
-     * <p/>
+     * </p>
+     * <p>
      * Query may include a comma-separated "focus" used to adjust the ordering
      * of results.
      * e.g. <code>getPlaces("Edinburgh, UK")</code> vs. <code>getPlaces("Edinburgh, USA")</code>
      * Additional commas are interpreted as part of the place name.
-     * <p/>
-     * <p/>
+     * </p>
+     * <p>
      * For a "startswith" filter, specify the place as a string followed by an asterisk (*),
      * Towns are returned in probability order. A maximum of 200 places
      * can be returned per request.
-     * <p/>
+     * </p>
      *
      * @return a {@link PlaceCollection} of places matching the query
      */

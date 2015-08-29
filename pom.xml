@@ -35,7 +35,7 @@
     <url>http://www.winterwell.com/software/jgeoplanet</url>
     <developers>
         <developer>
-            <id>joe</id>
+            <id>joehalliwell</id>
             <name>Joe Halliwell</name>
             <email>joe@joehalliwell.com</email>
             <url>http://www.joehalliwell.com</url>
@@ -43,6 +43,15 @@
             <organizationUrl>http://www.winterwell.com</organizationUrl>
         </developer>
     </developers>
+    <scm>
+        <url>https://github.com/joehalliwell/jGeoPlanet</url>
+        <connection>scm:git:git://github.com/joehalliwell/jGeoPlanet.git</connection>
+        <developerConnection>scm:git:git@github.com:joehalliwell/jGeoPlanet.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <url>https://github.com/joehalliwell/jGeoPlanet/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
     <licenses>
         <license>
             <name>LGPL 3.0</name>
@@ -50,6 +59,15 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
@@ -81,13 +99,57 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
-    <reporting>
-        <plugins>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-    </reporting>
+    </build>
 </project>

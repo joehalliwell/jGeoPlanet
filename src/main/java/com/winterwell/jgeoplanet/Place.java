@@ -21,7 +21,7 @@ import java.util.Comparator;
  * of language.
  * </p>
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class Place extends GeoPlanetResource {
 

@@ -3,7 +3,7 @@ package com.winterwell.jgeoplanet;
 /**
  * Thrown if an invalid place type is cited.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class InvalidPlaceTypeException extends GeoPlanetException {
 

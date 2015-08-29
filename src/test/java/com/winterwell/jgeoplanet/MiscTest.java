@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Miscellaneous tests
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class MiscTest extends GeoPlanetTest {
     @Test

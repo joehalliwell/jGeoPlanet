@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Tests for place collections
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceCollectionTest extends GeoPlanetTest {
 

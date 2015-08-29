@@ -9,7 +9,7 @@ import static org.hamcrest.CoreMatchers.*;
 /**
  * Tests for location and bounding box logic
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class LocationTest extends GeoPlanetTest {
 

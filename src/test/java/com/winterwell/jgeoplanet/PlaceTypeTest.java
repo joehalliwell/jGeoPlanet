@@ -7,7 +7,7 @@ import static org.hamcrest.CoreMatchers.*;
 /**
  * Tests for placetypes and placetype filtering
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceTypeTest extends GeoPlanetTest {
 

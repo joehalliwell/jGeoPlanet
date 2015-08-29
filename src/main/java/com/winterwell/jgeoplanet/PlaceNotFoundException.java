@@ -3,7 +3,7 @@ package com.winterwell.jgeoplanet;
 /**
  * Thrown when a place, specified by a WOE ID or search term could not be found.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceNotFoundException extends GeoPlanetException {
 

@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * An administrative region such as: State, Country, County, Province, District, Ward.
  * These are not the same as place types.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class AdminRegion extends GeoPlanetResource {
 

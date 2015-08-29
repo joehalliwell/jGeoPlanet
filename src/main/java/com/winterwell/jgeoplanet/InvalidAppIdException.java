@@ -3,7 +3,7 @@ package com.winterwell.jgeoplanet;
 /**
  * Thrown if the GeoPlanet application ID was invalid.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class InvalidAppIdException extends GeoPlanetException {
 

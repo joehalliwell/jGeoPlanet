@@ -49,7 +49,7 @@ import java.util.Map;
  * transparently.
  * </p>
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class GeoPlanet {
 

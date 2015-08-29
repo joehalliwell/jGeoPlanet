@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * Base class for jGeoPlanet tests
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class GeoPlanetTest {
 

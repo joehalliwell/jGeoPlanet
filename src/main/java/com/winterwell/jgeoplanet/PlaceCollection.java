@@ -22,7 +22,7 @@ import java.util.List;
  * to change this behaviour.
  * </p>
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceCollection extends GeoPlanetResource implements Iterable<Place> {
     Place base;

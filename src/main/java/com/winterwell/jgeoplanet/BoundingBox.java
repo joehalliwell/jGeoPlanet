@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * Regions that cover a pole are not supported.
  * </p>
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class BoundingBox {
 

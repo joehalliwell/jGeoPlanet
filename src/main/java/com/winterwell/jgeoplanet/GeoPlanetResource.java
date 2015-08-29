@@ -5,7 +5,7 @@ package com.winterwell.jgeoplanet;
  * bound to a particular GeoPlanet instance. As such it has an associated
  * language and application ID.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public abstract class GeoPlanetResource {
 

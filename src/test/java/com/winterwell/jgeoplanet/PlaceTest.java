@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Tests for Place and related functionality
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceTest extends GeoPlanetTest {
 

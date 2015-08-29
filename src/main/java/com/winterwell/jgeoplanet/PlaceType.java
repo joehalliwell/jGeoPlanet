@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * A type of place such as: Country, Ocean, Town.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class PlaceType extends GeoPlanetResource {
 

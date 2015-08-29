@@ -4,7 +4,7 @@ package com.winterwell.jgeoplanet;
  * Superclass for other exceptions thrown by the library.
  * This exception is also thrown for network and protocol errors.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class GeoPlanetException extends Exception {
 

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * A geographical location expressed as a latitude and longitude.
  *
- * @author Joe Halliwell <joe@winterwell.com>
+ * @author Joe Halliwell
  */
 public class Location {
 

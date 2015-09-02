@@ -1,4 +1,4 @@
-# jGeoPlanet - the java library for Yahoo! GeoPlanet
+# jGeoPlanet - the Java client for Yahoo! GeoPlanet
 
 JGeoPlanet is a small library providing easy access to the Yahoo! GeoPlanet
 API. It allows you to look up WOE (Where On Earth) IDs, and explore the
@@ -30,8 +30,8 @@ source code.
 
 ## Versions
 
-0.2.0 Available on Maven Central
-0.1.3 Support Yahoo Geocode; various bugfixes. This release breaks the API.
-0.1.2 Support multiple place types; add bounding box. This release breaks API.
-0.1.1 Added Place.getCountry()
-0.1.0 Inital release
+- 0.2.0 Changed package to com.joehalliwell.jgeoplanet. Available on Maven Central.
+- 0.1.3 Support Yahoo Geocode; various bugfixes. This release breaks the API.
+- 0.1.2 Support multiple place types; add bounding box. This release breaks API.
+- 0.1.1 Added Place.getCountry()
+- 0.1.0 Inital release

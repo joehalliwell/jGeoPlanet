@@ -1,9 +1,8 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 
 /**

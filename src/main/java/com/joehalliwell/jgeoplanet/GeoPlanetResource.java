@@ -1,4 +1,4 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 /**
  * Base class for GeoPlanet objects. A GeoPlanetResource is a resource

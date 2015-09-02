@@ -1,4 +1,4 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

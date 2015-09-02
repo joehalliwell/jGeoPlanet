@@ -1,4 +1,4 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 import org.json.JSONArray;
 import org.json.JSONException;

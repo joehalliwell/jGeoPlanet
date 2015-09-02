@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.winterwell</groupId>
+    <groupId>com.joehalliwell</groupId>
     <artifactId>jgeoplanet</artifactId>
     <name>jGeoPlanet</name>
-    <version>0.1.2</version>
+    <version>0.2.0-SNAPSHOT</version>
     <description>Java client for Yahoo's GeoPlanet (AKA Where On Earth) service. Provides a way to look up WOE IDs as
-        used by Twitter and FireEagle.
+        used by Twitter and FireEagle amongst other things.
     </description>
     <dependencies>
         <dependency>
@@ -32,15 +32,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <url>http://www.winterwell.com/software/jgeoplanet</url>
+    <url>http://www.joehalliwell.com/jGeoPlanet</url>
     <developers>
         <developer>
             <id>joehalliwell</id>
             <name>Joe Halliwell</name>
             <email>joe@joehalliwell.com</email>
             <url>http://www.joehalliwell.com</url>
-            <organization>Winterwell Associates</organization>
-            <organizationUrl>http://www.winterwell.com</organizationUrl>
         </developer>
     </developers>
     <scm>

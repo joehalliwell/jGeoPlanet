@@ -1,4 +1,4 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 /**
  * Thrown if the GeoPlanet application ID was invalid.

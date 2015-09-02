@@ -5,7 +5,7 @@ API. It allows you to look up WOE (Where On Earth) IDs, and explore the
 relationships between different places e.g. to find the towns within a given
 country.
 
-Homepage: http://www.winterwell.com/software/jgeoplanet/
+Homepage: http://www.joehalliwell.com/jGeoPlanet
 
 ## Dependencies
 
@@ -13,12 +13,12 @@ Dependencies are included with the binary release.
 
 ## Feedback
 
-Please report any bugs to joe.halliwell@winterwell.com.
+Please report any bugs to joe.halliwell@gmail.com.
 
 ## Licence
 
 Developed by Joe Halliwell. This code is copyright (c) Winterwell Associates
-Ltd, 2009. It is released as open-source under the LGPL license. See the file
+Ltd, 2009-2015. It is released as open-source under the LGPL license. See the file
 LICENCE.txt for a copy of this licence. This code comes with no warranty or
 support.
 
@@ -30,6 +30,7 @@ source code.
 
 ## Versions
 
+0.2.0 Available on Maven Central
 0.1.3 Support Yahoo Geocode; various bugfixes. This release breaks the API.
 0.1.2 Support multiple place types; add bounding box. This release breaks API.
 0.1.1 Added Place.getCountry()

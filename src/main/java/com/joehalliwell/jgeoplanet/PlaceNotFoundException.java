@@ -1,4 +1,4 @@
-package com.winterwell.jgeoplanet;
+package com.joehalliwell.jgeoplanet;
 
 /**
  * Thrown when a place, specified by a WOE ID or search term could not be found.
